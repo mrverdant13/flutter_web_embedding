@@ -87,35 +87,26 @@ class _MyAppState extends State<MyApp> {
   @js.JSExport()
   void changeDemoScreenTo(String screenString) {
     setState(() {
-      switch (screenString) {
-        case 'counter':
-          _currentDemoScreen = DemoScreen.counter;
-          break;
-        case 'textField':
-          _currentDemoScreen = DemoScreen.textField;
-          break;
-        case 'custom':
-          _currentDemoScreen = DemoScreen.custom;
-          break;
-        default:
-          _currentDemoScreen = DemoScreen.counter;
-          break;
-      }
+      _currentDemoScreen = switch (screenString) {
+        'textField' => DemoScreen.textField,
+        'custom' => DemoScreen.custom,
+        'counter' || _ => DemoScreen.counter,
+      };
     });
   }
 }
 
 class CounterDemo extends StatefulWidget {
-  final String title;
-  final int numToDisplay;
-  final VoidCallback incrementHandler;
-
   const CounterDemo({
-    super.key,
     required this.title,
     required this.numToDisplay,
     required this.incrementHandler,
+    super.key,
   });
+
+  final String title;
+  final int numToDisplay;
+  final VoidCallback incrementHandler;
 
   @override
   State<CounterDemo> createState() => _CounterDemoState();
@@ -148,15 +139,20 @@ class _CounterDemoState extends State<CounterDemo> {
 }
 
 class TextFieldDemo extends StatelessWidget {
-  const TextFieldDemo({super.key, required this.title});
+  const TextFieldDemo({
+    required this.title,
+    super.key,
+  });
+
   final String title;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(title)),
       body: const Center(
         child: Padding(
-          padding: EdgeInsets.all(14.0),
+          padding: EdgeInsets.all(14),
           child: TextField(
             maxLines: null,
             decoration: InputDecoration(
@@ -171,9 +167,12 @@ class TextFieldDemo extends StatelessWidget {
 }
 
 class CustomDemo extends StatefulWidget {
-  final String title;
+  const CustomDemo({
+    required this.title,
+    super.key,
+  });
 
-  const CustomDemo({super.key, required this.title});
+  final String title;
 
   @override
   State<CustomDemo> createState() => _CustomDemoState();
@@ -273,6 +272,8 @@ class _CustomDemoState extends State<CustomDemo> {
                         onChanged: (value) {
                           handleChange();
                         },
+                        // Explicit single line
+                        // ignore: avoid_redundant_argument_values
                         maxLines: 1,
                         decoration: const InputDecoration(
                           border: OutlineInputBorder(),
@@ -291,9 +292,7 @@ class _CustomDemoState extends State<CustomDemo> {
                         child: IconButton(
                           icon: const Icon(Icons.refresh),
                           color: Colors.white,
-                          onPressed: () {
-                            handleClear();
-                          },
+                          onPressed: handleClear,
                         ),
                       ),
                     ),
@@ -309,7 +308,7 @@ class _CustomDemoState extends State<CustomDemo> {
 
   void handleChange() {
     setState(() {
-      totalCharCount = _textController.value.text.toString().length;
+      totalCharCount = _textController.value.text.length;
     });
   }
 

@@ -5,18 +5,16 @@ version: 1.0.0+1
 resolution: workspace
 
 environment:
-  sdk: ^3.9.0-0
+  sdk: ">=3.6.0 <4.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
 
 dev_dependencies:
-  analysis_defaults:
-    path: ../../analysis_defaults
   flutter_test:
     sdk: flutter
-  flutter_lints: ^6.0.0
+  very_good_analysis: ^7.0.0
 
 flutter:
   uses-material-design: true

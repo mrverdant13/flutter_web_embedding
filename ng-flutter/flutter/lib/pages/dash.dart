@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
 class DashDemo extends StatefulWidget {
-  const DashDemo({super.key, required this.text});
+  const DashDemo({
+    required this.text,
+    super.key,
+  });
 
   final ValueNotifier<String> text;
 
@@ -56,6 +59,8 @@ class _DashDemoState extends State<DashDemo> {
 
   void _handleClear() {
     textController.value = TextEditingValue(
+      // Explicit initial value
+      // ignore: avoid_redundant_argument_values
       text: '',
       selection: TextSelection.collapsed(offset: widget.text.value.length),
     );
@@ -71,6 +76,8 @@ class _DashDemoState extends State<DashDemo> {
               width: double.infinity,
               color: colorPrimary,
               child: Column(
+                // Explicit cross axis alignment
+                // ignore: avoid_redundant_argument_values
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -119,6 +126,8 @@ class _DashDemoState extends State<DashDemo> {
                   child: TextField(
                     autofocus: true,
                     controller: textController,
+                    // Explicit single line
+                    // ignore: avoid_redundant_argument_values
                     maxLines: 1,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),

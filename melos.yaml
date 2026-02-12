@@ -1,0 +1,29 @@
+name: web_embedding_sample_monorepo
+
+packages:
+  - element_embedding_demo/
+  - ng-flutter/flutter/
+
+command:
+  bootstrap:
+    environment:
+      sdk: ">=3.6.0 <4.0.0"
+    dev_dependencies:
+      very_good_analysis: ^7.0.0
+  clean:
+    hooks:
+      pre:
+        run: >
+          melos run .clean
+
+scripts:
+  # Clean-up
+  .clean:
+    private: true
+    description: Deep clean-up
+    run: >
+      git clean
+      -dfX
+      MELOS_PACKAGE_PATH
+    packageFilters: {}
+

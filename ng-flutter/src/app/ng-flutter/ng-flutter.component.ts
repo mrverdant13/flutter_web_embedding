@@ -25,7 +25,7 @@ declare var window: {
     .spinner {
       display: flex;
       justify-content: center;
-      align-items: center;    
+      align-items: center;
     }`,
   ],
   imports: [
@@ -36,8 +36,8 @@ export class NgFlutterComponent implements AfterViewInit {
   // The target that will host the Flutter app.
   @ViewChild('flutterTarget') flutterTarget!: ElementRef;
 
-  @Input() src: String = 'main.dart.js';
-  @Input() assetBase: String = '';
+  @Input({ required: true }) src!: String;
+  @Input({ required: true }) assetBase!: String;
   @Output() appLoaded: EventEmitter<Object> = new EventEmitter<Object>();
 
   ngAfterViewInit(): void {

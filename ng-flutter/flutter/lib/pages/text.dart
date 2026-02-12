@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 
 class TextFieldDemo extends StatefulWidget {
-  const TextFieldDemo({super.key, required this.text});
+  const TextFieldDemo({
+    required this.text,
+    super.key,
+  });
+
   final ValueNotifier<String> text;
 
   @override
@@ -54,7 +58,7 @@ class _TextFieldDemoState extends State<TextFieldDemo> {
       ),
       body: Center(
         child: Padding(
-          padding: const EdgeInsets.all(14.0),
+          padding: const EdgeInsets.all(14),
           child: TextField(
             controller: textController,
             maxLines: null,

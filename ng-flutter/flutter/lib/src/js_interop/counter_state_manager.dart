@@ -17,7 +17,7 @@ enum DemoScreen {
 /// This is the bit of state that JS is able to see.
 ///
 /// It contains getters/setters/operations and a mechanism to
-/// subscribe to change notifications from an incoming [notifier].
+/// subscribe to change notifications from an incoming notifier.
 @JSExport()
 class DemoAppStateManager {
   // Creates a DemoAppStateManager wrapping a ValueNotifier.
@@ -25,20 +25,19 @@ class DemoAppStateManager {
     required ValueNotifier<DemoScreen> screen,
     required ValueNotifier<int> counter,
     required ValueNotifier<String> text,
-  }) : _counter = counter,
-       _text = text,
-       _screen = screen;
+  })  : _counter = counter,
+        _text = text,
+        _screen = screen;
 
   final ValueNotifier<DemoScreen> _screen;
   final ValueNotifier<int> _counter;
   final ValueNotifier<String> _text;
 
-  // _counter
-  int getClicks() {
+  int get clicks {
     return _counter.value;
   }
 
-  void setClicks(int value) {
+  set clicks(int value) {
     _counter.value = value;
   }
 
@@ -50,21 +49,19 @@ class DemoAppStateManager {
     _counter.value--;
   }
 
-  // _text
-  void setText(String text) {
-    _text.value = text;
-  }
-
-  String getText() {
+  String get text {
     return _text.value;
   }
 
-  // _screen
-  void setScreen(String screen) {
+  set text(String text) {
+    _text.value = text;
+  }
+
+  set screen(String screen) {
     _screen.value = DemoScreen.values.byName(screen);
   }
 
-  String getScreen() {
+  String get screen {
     return _screen.value.toString();
   }
 

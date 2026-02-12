@@ -2,7 +2,6 @@ import { ChangeDetectorRef, Component } from '@angular/core';
 import { NgFlutterComponent } from './ng-flutter/ng-flutter.component';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { MatSidenavModule } from '@angular/material/sidenav';
-import { CommonModule } from '@angular/common';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
@@ -49,29 +48,29 @@ import { MatInputModule } from '@angular/material/input';
         <h2>JS Interop</h2>
         <mat-form-field appearance="outline">
           <mat-label>Screen</mat-label>
-          <mat-select 
-              (valueChange)="this.flutterState?.setScreen($event)" 
-              [value]="this.flutterState?.getScreen()">
+          <mat-select
+              (valueChange)="onScreenSet($event)"
+              [value]="this.flutterState?.screen">
             <mat-option value="counter">Counter</mat-option>
             <mat-option value="text">TextField</mat-option>
             <mat-option value="dash">Custom App</mat-option>
           </mat-select>
         </mat-form-field>
-        @if (this.flutterState?.getScreen() === 'counter') {
+        @if (this.flutterState?.screen === 'counter') {
           <mat-form-field appearance="outline">
             <mat-label>Clicks</mat-label>
-            <input type="number" matInput (input)="onCounterSet($event)" [value]="this.flutterState?.getClicks()" />
+            <input type="number" matInput (input)="onCounterSet($event)" [value]="this.flutterState?.clicks" />
           </mat-form-field>
         } @else {
           <mat-form-field appearance="outline">
             <mat-label>Text</mat-label>
-            <input type="text" matInput (input)="onTextSet($event)" [value]="this.flutterState?.getText()" />
-            @if (this.flutterState?.getText()) {
+            <input type="text" matInput (input)="onTextSet($event)" [value]="this.flutterState?.text" />
+            @if (this.flutterState?.text) {
               <button matSuffix mat-icon-button aria-label="Clear" (click)="this.flutterState?.setText('')">
                 <mat-icon>close</mat-icon>
               </button>
             }
-          </mat-form-field>    
+          </mat-form-field>
         }
       </section>
     </mat-nav-list>
@@ -132,15 +131,14 @@ import { MatInputModule } from '@angular/material/input';
     MatSidenavModule,
     MatSidenavModule,
     MatIconModule,
-    CommonModule,
     MatListModule,
     MatCardModule,
     MatSliderModule,
     MatButtonModule,
     MatFormFieldModule,
     MatSelectModule,
-    MatInputModule,
-  ],
+    MatInputModule
+],
 })
 export class AppComponent {
   title = 'ng-flutter';
@@ -154,13 +152,17 @@ export class AppComponent {
     this.flutterState.onTextChanged(() => { this.onTextChanged() });
   }
 
+  onScreenSet(value: string) {
+    this.flutterState.screen = value;
+  }
+
   onCounterSet(event: Event) {
     let clicks = parseInt((event.target as HTMLInputElement).value, 10) || 0;
-    this.flutterState.setClicks(clicks);
+    this.flutterState.clicks = clicks;
   }
 
   onTextSet(event: Event) {
-    this.flutterState.setText((event.target as HTMLInputElement).value || '');
+    this.flutterState.text = (event.target as HTMLInputElement).value || '';
   }
 
   // I need to force a change detection here. When clicking on the "Decrement"

@@ -1,0 +1,11 @@
+name: web_embedding_sample_monorepo
+
+environment:
+  sdk: ">=3.6.0 <4.0.0"
+
+dev_dependencies:
+  melos: ^6.3.2
+
+workspace:
+  - element_embedding_demo/
+  - ng-flutter/flutter/

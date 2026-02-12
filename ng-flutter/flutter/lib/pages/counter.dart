@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
 class CounterDemo extends StatefulWidget {
-  const CounterDemo({super.key, required this.counter});
+  const CounterDemo({
+    required this.counter,
+    super.key,
+  });
 
   final ValueNotifier<int> counter;
 

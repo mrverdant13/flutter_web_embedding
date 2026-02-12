@@ -1,12 +1,10 @@
 import 'dart:js_interop' show createJSInteropWrapper;
 
 import 'package:flutter/material.dart';
-
-import 'pages/counter.dart';
-import 'pages/dash.dart';
-import 'pages/text.dart';
-
-import 'src/js_interop.dart';
+import 'package:ng_companion/pages/counter.dart';
+import 'package:ng_companion/pages/dash.dart';
+import 'package:ng_companion/pages/text.dart';
+import 'package:ng_companion/src/js_interop.dart';
 
 void main() {
   runApp(const MyApp());
@@ -61,8 +59,8 @@ class _MyAppState extends State<MyApp> {
   }
 
   Widget demoScreenRouter(DemoScreen which) => switch (which) {
-    DemoScreen.counter => CounterDemo(counter: _counter),
-    DemoScreen.text => TextFieldDemo(text: _text),
-    DemoScreen.dash => DashDemo(text: _text),
-  };
+        DemoScreen.counter => CounterDemo(counter: _counter),
+        DemoScreen.text => TextFieldDemo(text: _text),
+        DemoScreen.dash => DashDemo(text: _text),
+      };
 }
