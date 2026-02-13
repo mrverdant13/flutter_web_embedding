@@ -79,9 +79,17 @@ import { MatInputModule } from '@angular/material/input';
   <mat-sidenav-content class="sidenav-content">
     <div class="flutter-app" #container>
       <ng-flutter
-        src="flutter/main.dart.js"
-        assetBase="/flutter/"
-        (appLoaded)="onFlutterAppLoaded($event)"></ng-flutter>
+        targetId="🔴"
+        (appLoaded)="onFlutterAppLoaded($event)"
+      >
+      </ng-flutter>
+    </div>
+    <div class="flutter-app" #container>
+      <ng-flutter
+        targetId="🔵"
+        (appLoaded)="onSecondFlutterAppLoaded($event)"
+      >
+      </ng-flutter>
     </div>
   </mat-sidenav-content>
 </mat-sidenav-container>
@@ -138,13 +146,17 @@ import { MatInputModule } from '@angular/material/input';
     MatFormFieldModule,
     MatSelectModule,
     MatInputModule
-],
+  ],
 })
 export class AppComponent {
   title = 'ng-flutter';
   flutterState?: any;
 
   constructor(private changeDetectorRef: ChangeDetectorRef, private breakpointObserver: BreakpointObserver) { }
+
+  onSecondFlutterAppLoaded(state: any) {
+    // no-op
+  }
 
   onFlutterAppLoaded(state: any) {
     this.flutterState = state;
@@ -157,7 +169,7 @@ export class AppComponent {
   }
 
   onCounterSet(event: Event) {
-    let clicks = parseInt((event.target as HTMLInputElement).value, 10) || 0;
+    const clicks = parseInt((event.target as HTMLInputElement).value, 10) || 0;
     this.flutterState.clicks = clicks;
   }
 

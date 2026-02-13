@@ -35,9 +35,9 @@
             ],
             "scripts": [
               {
-                "input": "flutter/build/web/flutter.js",
+                "input": "flutter/build/web/flutter_bootstrap.js",
                 "inject": true,
-                "bundleName": "flutter"
+                "bundleName": "flutter_bs"
               }
             ]
           },

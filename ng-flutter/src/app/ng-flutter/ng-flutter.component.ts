@@ -1,17 +1,24 @@
-import { Component, AfterViewInit, SimpleChanges, ViewChild, ElementRef, Input, EventEmitter, Output } from '@angular/core';
+import { Component, AfterViewInit, SimpleChanges, ViewChild, ElementRef, Input, EventEmitter, Output, OnDestroy, ProviderToken } from '@angular/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
-// The global _flutter namespace
-declare var _flutter: any;
-declare var window: {
-  _debug: any
-};
+class Deferred<T> {
+  promise: Promise<T>;
+  resolve!: (value: T | PromiseLike<T>) => void;
+  reject!: (reason?: any) => void;
+
+  constructor() {
+    this.promise = new Promise<T>((_resolve, _reject) => {
+      this.resolve = _resolve;
+      this.reject = _reject;
+    });
+  }
+}
 
 @Component({
   selector: 'ng-flutter',
   standalone: true,
   template: `
-  <div #flutterTarget>
+  <div #flutterTarget [id]="targetId">
     <div class="spinner">
       <mat-spinner></mat-spinner>
     </div>
@@ -32,34 +39,62 @@ declare var window: {
     MatProgressSpinnerModule,
   ],
 })
-export class NgFlutterComponent implements AfterViewInit {
-  // The target that will host the Flutter app.
-  @ViewChild('flutterTarget') flutterTarget!: ElementRef;
-
-  @Input({ required: true }) src!: String;
-  @Input({ required: true }) assetBase!: String;
+export class NgFlutterComponent implements AfterViewInit, OnDestroy {
+  static deferredApp?: Deferred<any>;
+  @Input({ required: true }) targetId!: string;
   @Output() appLoaded: EventEmitter<Object> = new EventEmitter<Object>();
+  viewId?: number;
 
-  ngAfterViewInit(): void {
-    const target: HTMLElement = this.flutterTarget.nativeElement;
+  async ngAfterViewInit(): Promise<void> {
+    const target: HTMLElement = document.getElementById(this.targetId) as HTMLElement;
 
-    _flutter.loader.loadEntrypoint({
-      entrypointUrl: this.src,
-      onEntrypointLoaded: async (engineInitializer: any) => {
-        let appRunner = await engineInitializer.initializeEngine({
-          hostElement: target,
-          assetBase: this.assetBase,
-        });
-        await appRunner.runApp();
-      }
+
+    if (!NgFlutterComponent.deferredApp) {
+      NgFlutterComponent.deferredApp = new Deferred<any>();
+
+      // Used to verify that `main.dart.js` is lazy loaded
+      // await new Promise(resolve => setTimeout(resolve, 10000));
+
+      _flutter.loader.load({
+        config: {
+          entryPointBaseUrl: './flutter/',
+        },
+        onEntrypointLoaded: async (engineInitializer: any) => {
+          const appRunner = await engineInitializer.initializeEngine({
+            assetBase: './flutter/',
+            hostElement: target,
+            multiViewEnabled: true,
+            useColorEmoji: true,
+          });
+          NgFlutterComponent.deferredApp?.resolve(appRunner.runApp());
+        }
+      });
+    }
+
+    NgFlutterComponent.deferredApp.promise.then((app: any) => {
+      this.viewId = app.addView({
+        hostElement: target,
+        initialData: {
+          targetElementId: this.targetId,
+        },
+      });
+      console.log(`${this.targetId}: viewId: <${this.viewId}>`);
     });
 
     target.addEventListener("flutter-initialized", (event: Event) => {
-      let state = (event as CustomEvent).detail;
-      window._debug = state;
+      console.log(`${this.targetId}: flutter-initialized event received`);
+      const state = (event as CustomEvent).detail;
       this.appLoaded.emit(state);
     }, {
       once: true,
     });
+  }
+
+  async ngOnDestroy(): Promise<void> {
+    console.log(`${this.targetId}: ngOnDestroy`);
+    const app = await NgFlutterComponent.deferredApp?.promise;
+    if (!app) return;
+    if (!this.viewId) return;
+    const viewConfig = await app.removeView(this.viewId);
   }
 }

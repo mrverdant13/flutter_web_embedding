@@ -51,21 +51,15 @@ class _TextFieldDemoState extends State<TextFieldDemo> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text('Text Field'),
-      ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(14),
-          child: TextField(
-            controller: textController,
-            maxLines: null,
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-              hintText: 'Type something!',
-            ),
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(14),
+        child: TextField(
+          controller: textController,
+          maxLines: null,
+          decoration: const InputDecoration(
+            border: OutlineInputBorder(),
+            hintText: 'Type something!',
           ),
         ),
       ),

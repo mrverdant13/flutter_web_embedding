@@ -2,17 +2,19 @@ import 'dart:js_interop';
 
 import 'package:web/web.dart';
 
-/// Locates the root of the flutter app (for now, the first element that has
-/// a flt-renderer tag), and dispatches a JS event named [name] with [data].
-void broadcastAppEvent(String name, JSObject data) {
-  final root = document.querySelector('[flt-renderer]') as HTMLElement?;
-  assert(root != null, 'Flutter root element cannot be found!');
-
+/// Locates the flutter embedded element by its [targetElementId], and
+/// dispatches a JS event named [eventName] with the given [data].
+void broadcastAppEvent({
+  required String targetElementId,
+  required String eventName,
+  JSObject? data,
+}) {
+  final root = document.getElementById(targetElementId) as HTMLElement?;
+  assert(root != null, 'Flutter embedded element cannot be found!');
   final eventDetails = CustomEventInit(
     bubbles: true,
     composed: true,
     detail: data,
   );
-
-  root!.dispatchEvent(CustomEvent(name, eventDetails));
+  root!.dispatchEvent(CustomEvent(eventName, eventDetails));
 }

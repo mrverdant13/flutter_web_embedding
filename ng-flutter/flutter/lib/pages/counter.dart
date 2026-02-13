@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class CounterDemo extends StatefulWidget {
+class CounterDemo extends StatelessWidget {
   const CounterDemo({
     required this.counter,
     super.key,
@@ -9,38 +9,34 @@ class CounterDemo extends StatefulWidget {
   final ValueNotifier<int> counter;
 
   @override
-  State<CounterDemo> createState() => _CounterDemoState();
-}
-
-class _CounterDemoState extends State<CounterDemo> {
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text('Counter'),
-      ),
-      body: Center(
+    return SizedBox.expand(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
+          spacing: 16,
           children: <Widget>[
-            const Text('You have pushed the button this many times:'),
+            const Text(
+              'You have pushed the button this many times:',
+              textAlign: TextAlign.center,
+            ),
             ValueListenableBuilder(
-              valueListenable: widget.counter,
+              valueListenable: counter,
               builder: (context, value, child) => Text(
                 '$value',
                 style: Theme.of(context).textTheme.headlineMedium,
               ),
             ),
+            IconButton.filled(
+              tooltip: 'Increment',
+              onPressed: () {
+                counter.value++;
+              },
+              icon: const Icon(Icons.add),
+            ),
           ],
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          widget.counter.value++;
-        },
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
       ),
     );
   }

@@ -13,8 +13,6 @@ class DashDemo extends StatefulWidget {
 }
 
 class _DashDemoState extends State<DashDemo> {
-  final double textFieldHeight = 80;
-  final Color colorPrimary = Colors.blue.shade700;
   late final TextEditingController textController;
 
   int _totalCharCount = 0;
@@ -52,9 +50,9 @@ class _DashDemoState extends State<DashDemo> {
 
   @override
   void dispose() {
-    super.dispose();
-    textController.dispose();
     widget.text.removeListener(_onTextStateChanged);
+    textController.dispose();
+    super.dispose();
   }
 
   void _handleClear() {
@@ -68,13 +66,15 @@ class _DashDemoState extends State<DashDemo> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final textTheme = theme.textTheme;
     return Scaffold(
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Expanded(
-            child: Container(
-              width: double.infinity,
-              color: colorPrimary,
+            child: ColoredBox(
+              color: theme.primaryColor,
               child: Column(
                 // Explicit cross axis alignment
                 // ignore: avoid_redundant_argument_values
@@ -82,12 +82,9 @@ class _DashDemoState extends State<DashDemo> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'COUNT WITH DASH!',
-                    style: Theme.of(
-                      context,
-                    ).textTheme.titleLarge!.copyWith(color: Colors.white),
+                    'TEXT LENGTH!',
+                    style: textTheme.titleLarge!.copyWith(color: Colors.white),
                   ),
-                  // Bordered dash avatar
                   Padding(
                     padding: const EdgeInsets.all(12),
                     child: ClipOval(
@@ -96,7 +93,7 @@ class _DashDemoState extends State<DashDemo> {
                         padding: const EdgeInsets.all(2),
                         child: ClipOval(
                           child: Container(
-                            color: colorPrimary,
+                            color: theme.primaryColor,
                             padding: const EdgeInsets.all(2),
                             child: const CircleAvatar(
                               radius: 45,
@@ -110,9 +107,8 @@ class _DashDemoState extends State<DashDemo> {
                   ),
                   Text(
                     '$_totalCharCount',
-                    style: Theme.of(
-                      context,
-                    ).textTheme.displayLarge!.copyWith(color: Colors.white),
+                    style:
+                        textTheme.displayLarge!.copyWith(color: Colors.white),
                   ),
                 ],
               ),
@@ -139,7 +135,7 @@ class _DashDemoState extends State<DashDemo> {
                   padding: const EdgeInsets.only(left: 12),
                   child: Ink(
                     decoration: ShapeDecoration(
-                      color: colorPrimary,
+                      color: theme.primaryColor,
                       shape: const CircleBorder(),
                     ),
                     child: IconButton(
