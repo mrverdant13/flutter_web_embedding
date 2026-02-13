@@ -57,7 +57,7 @@ export class NgFlutterComponent implements AfterViewInit, OnDestroy {
 
       _flutter.loader.load({
         config: {
-          entrypointBaseUrl: './flutter/',
+          entryPointBaseUrl: './flutter/',
         },
         onEntrypointLoaded: async (engineInitializer: any) => {
           const appRunner = await engineInitializer.initializeEngine({

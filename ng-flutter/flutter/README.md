@@ -95,3 +95,13 @@ Thus, it is recommended to invoke the `load` method only when required.
 To properly mount different Flutter views in the same page, the `multiViewEnabled` flag must be set to `true` in the `initializeEngine` method.
 
 Plus, the app instance returned by `appRunner.runApp` must be cached, so it can later be used to add or remove views with `.addView` and `.removeView` methods, respectively.
+
+### `entryPointBaseUrl` vs `entrypointBaseUrl`
+
+When invoking the `load` method, the `entrypointBaseUrl` and `entryPointBaseUrl` arguments are both accepted by the `config` object.
+
+In some cases, a deprecation warning is displayed in the console, which may lead to favoring the `entrypointBaseUrl` argument over the `entryPointBaseUrl` argument.
+
+However, the `entrypointBaseUrl` argument is not reliable, as may break the initialization process without a clear identifiable reason.
+
+ALWAYS use the `entryPointBaseUrl` argument instead.
