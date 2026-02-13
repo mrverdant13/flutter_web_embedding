@@ -1,107 +1,89 @@
 # ng_companion
 
-A new Flutter project.
+Flutter web companion for the [ng-flutter](../README.md) Angular + Flutter integration demo. This app runs embedded inside Angular and shares state (screen, counter, text) via JavaScript interop.
 
-## Getting Started
+## Architecture
 
-This project is a starting point for a Flutter application.
+### Multi-View Support
 
-A few resources to get you started if this is your first Flutter project:
+The app uses `MultiViewApp` and `runWidget` so it can render into multiple host elements. Angular mounts one instance per `ng-flutter` component and passes `targetElementId` via `initialData` so each view can target its host DOM element for events.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+### JS Interop
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+* **`DemoAppStateManager`**
 
-## Found Issues
+  `@JSExport()` class that exposes `screen`, `clicks`, `text`, `setText`, `onClicksChanged`, and `onTextChanged` to JavaScript.
 
-### 001. Deprecated `serviceWorkerVersion` variable
+* **`createJSInteropWrapper`**
 
-#### Problem
+  From `dart:js_interop`. It wraps the state manager for JS consumption.
 
-When running `flutter build web`, the following warning is displayed:
+* **`broadcastAppEvent`**
+
+  Dispatches a custom event (e.g. `flutter-initialized`) on the host DOM element with the wrapped state so Angular can receive and bind to it.
+
+### Bootstrap
+
+`web/flutter_bootstrap.js` holds initialization code based on `{{flutter_js}}` and `{{flutter_build_config}}` placeholder variables. It does not perform any actual Flutter initialization. It only prepares the environment for the actual initialization process.
+
+Angular injects this script and serves the Flutter assets under `/flutter`, so the entry point (`main.dart.js`) is loaded lazily only when required.
+
+## Development
+
+This is not a runnable Flutter project. It should only be used as a dependency for the Angular project by building it:
+
+```bash
+flutter build web
+```
+
+## Observations
+
+### Empty `web/index.html`
+
+Given that this project is not aimed at being a standalone runnable project, the `web/index.html` file was kept empty.
+
+### Deprecated `serviceWorkerVersion` Variable
+
+When building the Flutter project, the following warning is displayed:
 
 > Warning: In index.html:<LINE_NUMBER>: Local variable for "serviceWorkerVersion" is
 deprecated. Use "{{flutter_service_worker_version}}" template token instead.
 See https://docs.flutter.dev/platform-integration/web/initialization for more
 details.
 
-Pointing to the following piece of code:
+To solve this, any reference to the `serviceWorkerVersion` variable was removed, as it was not required anymore.
 
-```html
-<!-- web/index.html -->
-<head>
-  <script>
-    // The value below is injected by flutter build, do not touch.
-    var serviceWorkerVersion = null;
-  </script>
-</head>
-```
+### Deprecated `FlutterLoader.loadEntrypoint` Method
 
-#### Solution
-
-To solve this, the script tag got removed.
-
-### 002. Deprecated `FlutterLoader.loadEntrypoint` method
-
-#### Problem
-
-When running `flutter build web`, the following warning is displayed:
-
+When running the Flutter project, the following warning is displayed:
 > Warning: In index.html:<LINE_NUMBER>: "FlutterLoader.loadEntrypoint" is deprecated. Use
 "FlutterLoader.load" instead. See
 https://docs.flutter.dev/platform-integration/web/initialization for more
 details.
 
-Pointing to the following piece of code:
+To solve this, the `loadEntrypoint` method was replaced with the `load` method.
 
-```html
-<!-- web/index.html -->
-<body>
-  <script>
-    // ...
-    window.addEventListener('load', function(ev) {
-      // Download main.dart.js
-      _flutter.loader.loadEntrypoint({
-        serviceWorker: {
-          serviceWorkerVersion: serviceWorkerVersion,
-        },
-        onEntrypointLoaded: async function(engineInitializer) {
-          await engineInitializer.autoStart();
-        }
-      });
-    });
-    // ...
-  </script>
-</body>
-```
+Initially, this method was invoked in a script tag in the `web/index.html` file. Afterwards, since the project was not aimed at being a standalone runnable project, the `web/index.html` file was kept empty, and the entry point loading was delegated to the Angular side.
 
-#### Solution
+For specific details on the signature and implementation of these methods, see the [JS scripts for the Flutter Web Engine](https://github.com/flutter/flutter/tree/master/engine/src/flutter/lib/web_ui/flutter_js/src)
 
-To solve this, the `loadEntrypoint` method got replaced with the `load` method with no changes in its invocation.
-
-## Observations
 
 ### Lazy Entrypoint Loading
 
-The `load` method is the one that resolves the `main.dart.js` entrypoint.
+`load` resolves `main.dart.js` on demand.
 
-Thus, it is recommended to invoke the `load` method only when required.
+It is strongly recommended to call it only when the Flutter view is about to be shown for better performance.
 
 ### Multi-View Support
 
-To properly mount different Flutter views in the same page, the `multiViewEnabled` flag must be set to `true` in the `initializeEngine` method.
+To mount multiple Flutter views on the same page, the host must:
 
-Plus, the app instance returned by `appRunner.runApp` must be cached, so it can later be used to add or remove views with `.addView` and `.removeView` methods, respectively.
+1. Pass `multiViewEnabled: true` to `engineInitializer.initializeEngine()`.
+2. Cache the app instance returned by `appRunner.runApp()`.
+3. Use `.addView()` and `.removeView()` to create and destroy views.
 
 ### `entryPointBaseUrl` vs `entrypointBaseUrl`
 
-When invoking the `load` method, the `entrypointBaseUrl` and `entryPointBaseUrl` arguments are both accepted by the `config` object.
+Both `entryPointBaseUrl` (capital P) and `entrypointBaseUrl` (lowercase p) are accepted. However, the lowercase variant can result in unreliable behavior that is difficult to debug.
 
-In some cases, a deprecation warning is displayed in the console, which may lead to favoring the `entrypointBaseUrl` argument over the `entryPointBaseUrl` argument.
-
-However, the `entrypointBaseUrl` argument is not reliable, as may break the initialization process without a clear identifiable reason.
-
-ALWAYS use the `entryPointBaseUrl` argument instead.
+ALWAYS use the capital variant `entryPointBaseUrl`. Even if a deprecation warning is displayed.

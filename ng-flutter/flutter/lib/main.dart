@@ -41,13 +41,15 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     final export = createJSInteropWrapper(_state);
-    // Emit this through the root object of the flutter embedded element
+    // initialData comes from Angular's
+    // addView({ initialData: { targetElementId } })
     final view = View.of(context);
     final initialData = web_ui.views.getInitialData(view.viewId)?.dartify();
     if (initialData is! Map) return;
     final targetElementId = initialData['targetElementId'];
     if (targetElementId is! String) return;
     _targetElementId = targetElementId;
+    // Angular listens for this event to receive the state controller
     broadcastAppEvent(
       targetElementId: targetElementId,
       eventName: 'flutter-initialized',
@@ -122,13 +124,15 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     final export = createJSInteropWrapper(_state);
-    // Emit this through the root object of the flutter embedded element
+    // initialData comes from Angular's
+    // addView({ initialData: { targetElementId } })
     final view = View.of(context);
     final initialData = web_ui.views.getInitialData(view.viewId)?.dartify();
     if (initialData is! Map) return;
     final targetElementId = initialData['targetElementId'];
     if (targetElementId is! String) return;
     _targetElementId = targetElementId;
+    // Angular listens for this event to receive the state controller
     broadcastAppEvent(
       targetElementId: targetElementId,
       eventName: 'flutter-initialized',

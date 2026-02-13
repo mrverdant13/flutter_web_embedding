@@ -1,6 +1,11 @@
 import { Component, AfterViewInit, Input, EventEmitter, Output, OnDestroy } from '@angular/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
+/**
+ * Promise-like utility to share the Flutter app instance across ng-flutter instances.
+ *
+ * The first instance loads the engine and creates the app; later instances reuse it.
+ */
 class Deferred<T> {
   promise: Promise<T>;
   resolve!: (value: T | PromiseLike<T>) => void;
@@ -95,6 +100,6 @@ export class NgFlutterComponent implements AfterViewInit, OnDestroy {
     const app = await NgFlutterComponent.deferredApp?.promise;
     if (!app) return;
     if (!this.viewId) return;
-    const viewConfig = await app.removeView(this.viewId);
+    await app.removeView(this.viewId);
   }
 }
