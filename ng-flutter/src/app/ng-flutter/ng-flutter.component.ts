@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, SimpleChanges, ViewChild, ElementRef, Input, EventEmitter, Output, OnDestroy, ProviderToken } from '@angular/core';
+import { Component, AfterViewInit, Input, EventEmitter, Output, OnDestroy } from '@angular/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 class Deferred<T> {
@@ -57,7 +57,7 @@ export class NgFlutterComponent implements AfterViewInit, OnDestroy {
 
       _flutter.loader.load({
         config: {
-          entryPointBaseUrl: './flutter/',
+          entrypointBaseUrl: './flutter/',
         },
         onEntrypointLoaded: async (engineInitializer: any) => {
           const appRunner = await engineInitializer.initializeEngine({

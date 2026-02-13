@@ -1,6 +1,7 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, ViewChild } from '@angular/core';
 import { NgFlutterComponent } from './ng-flutter/ng-flutter.component';
-import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { FlutterEffectsSectionComponent } from './flutter-effects-section/flutter-effects-section.component';
+import { FlutterJsInteropSectionComponent, FlutterState } from './flutter-js-interop-section/flutter-js-interop-section.component';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
@@ -11,6 +12,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+
+type FlutterInstanceKey = 'red' | 'blue';
 
 @Component({
   standalone: true,
@@ -28,66 +31,46 @@ import { MatInputModule } from '@angular/material/input';
   <mat-icon aria-hidden="true">flutter_dash</mat-icon>
 </mat-toolbar>
 <mat-sidenav-container [hasBackdrop]=false class="sidenav-container">
-  <mat-sidenav #drawer mode="side" [opened]=false class="sidenav">
+  <mat-sidenav #drawer mode="side" [opened]=true class="sidenav">
     <mat-nav-list autosize>
-      <section>
-        <h2>Effects</h2>
-        <div class="button-list">
-          <button class="mb-control" mat-stroked-button color="primary"
-              (click)="container.classList.toggle('fx-shadow')">Shadow</button>
-          <button class="mb-control" mat-stroked-button color="primary"
-              (click)="container.classList.toggle('fx-mirror')">Mirror</button>
-          <button class="mb-control" mat-stroked-button color="primary"
-              (click)="container.classList.toggle('fx-resize')">Resize</button>
-          <button class="mb-control" mat-stroked-button color="primary"
-              (click)="container.classList.toggle('fx-spin')">Spin</button>
-        </div>
-      </section>
+      <app-flutter-effects-section identifier="🔴" [containerRef]="containerRed" />
+      <app-flutter-js-interop-section
+        identifier="🔴"
+        [flutterState]="flutterStateRed"
+        (screenSet)="onScreenSet($event, 'red')"
+        (counterSet)="onCounterSet($event, 'red')"
+        (textSet)="onTextSet($event, 'red')"
+      />
 
-      <section>
-        <h2>JS Interop</h2>
-        <mat-form-field appearance="outline">
-          <mat-label>Screen</mat-label>
-          <mat-select
-              (valueChange)="onScreenSet($event)"
-              [value]="this.flutterState?.screen">
-            <mat-option value="counter">Counter</mat-option>
-            <mat-option value="text">TextField</mat-option>
-            <mat-option value="dash">Custom App</mat-option>
-          </mat-select>
-        </mat-form-field>
-        @if (this.flutterState?.screen === 'counter') {
-          <mat-form-field appearance="outline">
-            <mat-label>Clicks</mat-label>
-            <input type="number" matInput (input)="onCounterSet($event)" [value]="this.flutterState?.clicks" />
-          </mat-form-field>
-        } @else {
-          <mat-form-field appearance="outline">
-            <mat-label>Text</mat-label>
-            <input type="text" matInput (input)="onTextSet($event)" [value]="this.flutterState?.text" />
-            @if (this.flutterState?.text) {
-              <button matSuffix mat-icon-button aria-label="Clear" (click)="this.flutterState?.setText('')">
-                <mat-icon>close</mat-icon>
-              </button>
-            }
-          </mat-form-field>
-        }
-      </section>
+      <!-- Divider with space between sections -->
+      <mat-divider class="section-divider"></mat-divider>
+
+    <!-- </mat-nav-list>
+
+    <mat-nav-list autosize> -->
+      <app-flutter-effects-section identifier="🔵" [containerRef]="containerBlue" />
+      <app-flutter-js-interop-section
+        identifier="🔵"
+        [flutterState]="flutterStateBlue"
+        (screenSet)="onScreenSet($event, 'blue')"
+        (counterSet)="onCounterSet($event, 'blue')"
+        (textSet)="onTextSet($event, 'blue')"
+      />
     </mat-nav-list>
   </mat-sidenav>
 
   <mat-sidenav-content class="sidenav-content">
-    <div class="flutter-app" #container>
+    <div class="flutter-app" #containerRed>
       <ng-flutter
         targetId="🔴"
-        (appLoaded)="onFlutterAppLoaded($event)"
+        (appLoaded)="onFlutterAppLoaded($event, 'red')"
       >
       </ng-flutter>
     </div>
-    <div class="flutter-app" #container>
+    <div class="flutter-app" #containerBlue>
       <ng-flutter
         targetId="🔵"
-        (appLoaded)="onSecondFlutterAppLoaded($event)"
+        (appLoaded)="onFlutterAppLoaded($event, 'blue')"
       >
       </ng-flutter>
     </div>
@@ -110,33 +93,30 @@ import { MatInputModule } from '@angular/material/input';
     width: 300px;
     padding: 10px;
   }
-  .button-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 5px;
-    margin-bottom: 20px;
-  }
-  .button-list button {
-    min-width: 130px;
-  }
   .sidenav-content {
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 16px;
+    gap: 16px;
   }
   .flutter-app {
-    border: 1px solid #eee;
+    border: 2px solid #ddd;
     border-radius: 5px;
     height: 480px;
     width: 320px;
     transition: all 150ms ease-in-out;
     overflow: hidden;
   }
+  .section-divider {
+    margin: 10px 0;
+  }
   `],
   imports: [
     NgFlutterComponent,
+    FlutterEffectsSectionComponent,
+    FlutterJsInteropSectionComponent,
     MatToolbarModule,
-    MatSidenavModule,
     MatSidenavModule,
     MatIconModule,
     MatListModule,
@@ -149,42 +129,61 @@ import { MatInputModule } from '@angular/material/input';
   ],
 })
 export class AppComponent {
-  title = 'ng-flutter';
-  flutterState?: any;
+  flutterStateRed?: FlutterState;
+  flutterStateBlue?: FlutterState;
 
-  constructor(private changeDetectorRef: ChangeDetectorRef, private breakpointObserver: BreakpointObserver) { }
+  @ViewChild('containerRed') containerRed!: ElementRef<HTMLElement>;
+  @ViewChild('containerBlue') containerBlue!: ElementRef<HTMLElement>;
 
-  onSecondFlutterAppLoaded(state: any) {
-    // no-op
+  constructor(private changeDetectorRef: ChangeDetectorRef) { }
+
+  private getState(key: FlutterInstanceKey): any {
+    switch (key) {
+      case 'red':
+        return this.flutterStateRed;
+      case 'blue':
+        return this.flutterStateBlue;
+    }
   }
 
-  onFlutterAppLoaded(state: any) {
-    this.flutterState = state;
-    this.flutterState.onClicksChanged(() => { this.onCounterChanged() });
-    this.flutterState.onTextChanged(() => { this.onTextChanged() });
+  onFlutterAppLoaded(state: any, key: FlutterInstanceKey): void {
+    switch (key) {
+      case 'red':
+        this.flutterStateRed = state;
+        break;
+      case 'blue':
+        this.flutterStateBlue = state;
+        break;
+    }
+    state.onClicksChanged?.(() => this.onCounterChanged());
+    state.onTextChanged?.(() => this.onTextChanged());
   }
 
-  onScreenSet(value: string) {
-    this.flutterState.screen = value;
+  onScreenSet(value: string, key: FlutterInstanceKey): void {
+    const state = this.getState(key);
+    if (state) state.screen = value;
   }
 
-  onCounterSet(event: Event) {
-    const clicks = parseInt((event.target as HTMLInputElement).value, 10) || 0;
-    this.flutterState.clicks = clicks;
+  onCounterSet(clicks: number, key: FlutterInstanceKey): void {
+    const state = this.getState(key);
+    if (state) state.clicks = clicks;
   }
 
-  onTextSet(event: Event) {
-    this.flutterState.text = (event.target as HTMLInputElement).value || '';
+  onTextSet(text: string, key: FlutterInstanceKey): void {
+    const state = this.getState(key);
+    if (state) state.text = text;
   }
 
-  // I need to force a change detection here. When clicking on the "Decrement"
-  // button, everything works fine, but clicking on Flutter doesn't trigger a
-  // repaint (even though this method is called)
-  onCounterChanged() {
+  // Need to force a change detection here.
+  //
+  // When clicking on any interactive element, everything works fine, but
+  // clicking on Flutter doesn't trigger a repaint (even though this method is
+  // called)
+  onCounterChanged(): void {
     this.changeDetectorRef.detectChanges();
   }
 
-  onTextChanged() {
+  onTextChanged(): void {
     this.changeDetectorRef.detectChanges();
   }
 }
