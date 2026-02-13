@@ -16,87 +16,19 @@ void main() {
   );
 }
 
-class MyApp extends StatefulWidget {
-  const MyApp({super.key});
-
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  final ValueNotifier<DemoScreen> _screen = ValueNotifier<DemoScreen>(
-    DemoScreen.counter,
-  );
-  final ValueNotifier<int> _counter = ValueNotifier<int>(0);
-  final ValueNotifier<String> _text = ValueNotifier<String>('');
-  String? _targetElementId;
-
-  late final DemoAppStateManager _state = DemoAppStateManager(
-    screen: _screen,
-    counter: _counter,
-    text: _text,
-  );
-
-  @override
-  void initState() {
-    super.initState();
-    final export = createJSInteropWrapper(_state);
-    // initialData comes from Angular's
-    // addView({ initialData: { targetElementId } })
-    final view = View.of(context);
-    final initialData = web_ui.views.getInitialData(view.viewId)?.dartify();
-    if (initialData is! Map) return;
-    final targetElementId = initialData['targetElementId'];
-    if (targetElementId is! String) return;
-    _targetElementId = targetElementId;
-    // Angular listens for this event to receive the state controller
-    broadcastAppEvent(
-      targetElementId: targetElementId,
-      eventName: 'flutter-initialized',
-      data: export,
-    );
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
+class MyApp extends StatelessWidget {
+  const MyApp({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Element embedding',
+      title: 'Multi-View Flutter Web Embedding',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
       ),
-      home: Scaffold(
-        appBar: AppBar(
-          title: ValueListenableBuilder<DemoScreen>(
-            valueListenable: _screen,
-            builder: (context, value, child) => switch (value) {
-              DemoScreen.counter => const Text('Counter'),
-              DemoScreen.text => const Text('Text Field'),
-              DemoScreen.dash => const Text('Dash'),
-            },
-          ),
-          actions: [
-            // This is not reactive, as it is only set in the initState method
-            if (_targetElementId != null)
-              Padding(
-                padding: const EdgeInsets.all(8),
-                child: Text('$_targetElementId'),
-              ),
-          ],
-        ),
-        body: ValueListenableBuilder<DemoScreen>(
-          valueListenable: _screen,
-          builder: (context, value, child) => switch (value) {
-            DemoScreen.counter => CounterDemo(counter: _counter),
-            DemoScreen.text => TextFieldDemo(text: _text),
-            DemoScreen.dash => DashDemo(text: _text),
-          },
-        ),
-      ),
+      home: const HomeScreen(),
     );
   }
 }
@@ -150,10 +82,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: theme.primaryColor,
         title: ValueListenableBuilder<DemoScreen>(
           valueListenable: _screen,
           builder: (context, value, child) => switch (value) {
