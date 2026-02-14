@@ -1,4 +1,5 @@
-import 'dart:js_interop' show JSAnyUtilityExtension, createJSInteropWrapper;
+// import 'dart:js_interop' show JSAnyUtilityExtension, createJSInteropWrapper;
+import 'dart:js_interop' as js;
 import 'dart:ui_web' as web_ui;
 
 import 'package:flutter/material.dart';
@@ -46,7 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final _text = ValueNotifier<String>('');
   String? _targetElementId;
 
-  late final DemoAppStateManager _state = DemoAppStateManager(
+  late final DemoAppStateManager _stateManager = DemoAppStateManager(
     screen: _screen,
     counter: _counter,
     text: _text,
@@ -55,20 +56,19 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    final export = createJSInteropWrapper(_state);
     // initialData comes from Angular's
     // addView({ initialData: { targetElementId } })
     final view = View.of(context);
-    final initialData = web_ui.views.getInitialData(view.viewId)?.dartify();
-    if (initialData is! Map) return;
-    final targetElementId = initialData['targetElementId'];
-    if (targetElementId is! String) return;
+    final initialData =
+        web_ui.views.getInitialData(view.viewId) as JsNgFlutterInitialData?;
+    if (initialData == null) return;
+    final targetElementId = initialData.targetElementId;
     _targetElementId = targetElementId;
     // Angular listens for this event to receive the state controller
-    broadcastAppEvent(
+    final stateController = js.createJSInteropWrapper(_stateManager);
+    injectStateController(
       targetElementId: targetElementId,
-      eventName: 'ng-flutter-initialized',
-      data: export,
+      data: stateController,
     );
   }
 

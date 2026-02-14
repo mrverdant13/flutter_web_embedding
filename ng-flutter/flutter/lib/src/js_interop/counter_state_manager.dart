@@ -1,4 +1,4 @@
-import 'dart:js_interop';
+import 'dart:js_interop' as js;
 
 import 'package:flutter/foundation.dart';
 
@@ -18,7 +18,7 @@ enum DemoScreen {
 ///
 /// It contains getters/setters/operations and a mechanism to
 /// subscribe to change notifications from an incoming notifier.
-@JSExport()
+@js.JSExport()
 class DemoAppStateManager {
   // Creates a DemoAppStateManager wrapping a ValueNotifier.
   DemoAppStateManager({

@@ -5,6 +5,8 @@ if (!window._ngFlutter) {
   window._ngFlutter = {};
 }
 
+_ngFlutter.initializationEventName = 'ng-flutter-initialized';
+
 _ngFlutter.initMultiViewApp = async () => {
   if (_ngFlutter.deferredApp) {
     await _ngFlutter.deferredApp.promise;
@@ -36,7 +38,7 @@ _ngFlutter.addView = async (hostElement, initialData, onStateControllerReady) =>
     );
   }
   const app = await deferredApp.promise;
-  hostElement.addEventListener('ng-flutter-initialized', (event) => {
+  hostElement.addEventListener(_ngFlutter.initializationEventName, (event) => {
     const stateController = event.detail;
     onStateControllerReady(stateController);
   }, {
