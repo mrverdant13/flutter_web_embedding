@@ -23,24 +23,24 @@ export type FlutterState = {
       <mat-form-field appearance="outline">
         <mat-label>Screen</mat-label>
         <mat-select
-            (valueChange)="screenSet.emit($event)"
-            [value]="flutterState?.screen">
+            (valueChange)="flutterStateController.screen = $event"
+            [value]="flutterStateController.screen">
           <mat-option value="counter">Counter</mat-option>
           <mat-option value="text">TextField</mat-option>
           <mat-option value="dash">Custom App</mat-option>
         </mat-select>
       </mat-form-field>
-      @if (flutterState?.screen === 'counter') {
+      @if (flutterStateController.screen === 'counter') {
         <mat-form-field appearance="outline">
           <mat-label>Clicks</mat-label>
-          <input type="number" matInput (input)="onCounterInput($event)" [value]="flutterState?.clicks" />
+          <input type="number" matInput (input)="onCounterInput($event)" [value]="flutterStateController.clicks" />
         </mat-form-field>
       } @else {
         <mat-form-field appearance="outline">
           <mat-label>Text</mat-label>
-          <input type="text" matInput (input)="onTextInput($event)" [value]="flutterState?.text" />
-          @if (flutterState?.text) {
-            <button matSuffix mat-icon-button aria-label="Clear" (click)="flutterState?.setText('')">
+          <input type="text" matInput (input)="onTextInput($event)" [value]="flutterStateController.text" />
+          @if (flutterStateController.text) {
+            <button matSuffix mat-icon-button aria-label="Clear" (click)="flutterStateController.setText('')">
               <mat-icon>close</mat-icon>
             </button>
           }
@@ -58,19 +58,15 @@ export type FlutterState = {
 })
 export class FlutterJsInteropSectionComponent {
   @Input() identifier?: string;
-  @Input() flutterState?: FlutterState;
-
-  @Output() screenSet = new EventEmitter<string>();
-  @Output() counterSet = new EventEmitter<number>();
-  @Output() textSet = new EventEmitter<string>();
+  @Input({required: true}) flutterStateController!: NgFlutterStateController;
 
   onCounterInput(event: Event): void {
     const clicks = parseInt((event.target as HTMLInputElement).value, 10) || 0;
-    this.counterSet.emit(clicks);
+    this.flutterStateController.clicks = clicks;
   }
 
   onTextInput(event: Event): void {
     const text = (event.target as HTMLInputElement).value || '';
-    this.textSet.emit(text);
+    this.flutterStateController.text = text;
   }
 }

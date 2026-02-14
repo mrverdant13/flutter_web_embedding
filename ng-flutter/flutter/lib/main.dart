@@ -67,7 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
     // Angular listens for this event to receive the state controller
     broadcastAppEvent(
       targetElementId: targetElementId,
-      eventName: 'flutter-initialized',
+      eventName: 'ng-flutter-initialized',
       data: export,
     );
   }

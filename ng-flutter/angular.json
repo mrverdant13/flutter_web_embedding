@@ -26,7 +26,7 @@
               {
                 "input": "flutter/build/web/",
                 "glob": "**/*",
-                "output": "/flutter/"
+                "output": "/custom-flutter-component/"
               }
             ],
             "styles": [
@@ -37,7 +37,7 @@
               {
                 "input": "flutter/build/web/flutter_bootstrap.js",
                 "inject": true,
-                "bundleName": "flutter_bs"
+                "bundleName": "custom-flutter-bs"
               }
             ]
           },
