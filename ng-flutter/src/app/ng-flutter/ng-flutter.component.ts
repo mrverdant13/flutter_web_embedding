@@ -1,5 +1,6 @@
-import { Component, AfterViewInit, Input, EventEmitter, Output, OnDestroy } from '@angular/core';
+import { Component, AfterViewInit, Input, OnDestroy, effect } from '@angular/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { NgFlutterStore } from '../flutter-js-interop-section/ng-flutter-store';
 
 @Component({
   selector: 'ng-flutter',
@@ -28,10 +29,28 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 })
 export class NgFlutterComponent implements AfterViewInit, OnDestroy {
   @Input({ required: true }) targetId!: string;
-  @Output() onStateControllerReady: EventEmitter<NgFlutterStateController> = new EventEmitter<NgFlutterStateController>();
+  @Input({ required: true }) store!: NgFlutterStore;
 
   viewId?: number;
+  stateController?: NgFlutterStateController;
 
+  constructor() {
+    effect(() => {
+      const screen = this.store.screen();
+      if (!this.stateController) return;
+      this.stateController.screen = screen;
+    });
+    effect(() => {
+      const clicks = this.store.clicks();
+      if (!this.stateController) return;
+      this.stateController.clicks = clicks;
+    });
+    effect(() => {
+      const text = this.store.text();
+      if (!this.stateController) return;
+      this.stateController.text = text;
+    });
+  }
   async ngAfterViewInit(): Promise<void> {
     const target = document.getElementById(this.targetId);
     if (!target) {
@@ -40,21 +59,25 @@ export class NgFlutterComponent implements AfterViewInit, OnDestroy {
 
     await _ngFlutter.initMultiViewApp();
 
-    const viewId = await _ngFlutter.addView(
+
+    this.viewId = await _ngFlutter.addView(
       target,
       {
         targetElementId: this.targetId,
       },
       (state: NgFlutterStateController) => {
-        console.log(`${this.targetId}: ng-flutter-initialized event received`);
-        this.onStateControllerReady.emit(state);
+        this.stateController = state;
+        state.onClicksChanged(() => {
+          this.store.setClicks(state.clicks);
+        });
+        state.onTextChanged(() => {
+          this.store.setText(state.text);
+        });
       },
     );
-    console.log(`${this.targetId}: viewId: <${viewId}>`);
   }
 
   async ngOnDestroy(): Promise<void> {
-    console.log(`${this.targetId}: ngOnDestroy`);
     if (!this.viewId) return;
     await _ngFlutter.removeView(this.viewId);
   }

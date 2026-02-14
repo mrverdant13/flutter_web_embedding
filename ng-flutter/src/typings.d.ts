@@ -10,6 +10,7 @@ type NgFlutterStateController = {
 
 // NgFlutter type
 type NgFlutter = {
+  initializationEventName: string;
   initMultiViewApp: () => Promise<void>;
   addView: (
     hostElement: HTMLElement,

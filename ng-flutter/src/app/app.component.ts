@@ -1,7 +1,8 @@
-import { ChangeDetectorRef, Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, inject, ViewChild } from '@angular/core';
 import { NgFlutterComponent } from './ng-flutter/ng-flutter.component';
 import { FlutterEffectsSectionComponent } from './flutter-effects-section/flutter-effects-section.component';
 import { FlutterJsInteropSectionComponent } from './flutter-js-interop-section/flutter-js-interop-section.component';
+import { NgFlutterStore, NG_FLUTTER_STORE_RED, NG_FLUTTER_STORE_BLUE } from './flutter-js-interop-section/ng-flutter-store';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
@@ -13,11 +14,13 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 
-type FlutterInstanceKey = 'red' | 'blue';
-
 @Component({
   standalone: true,
   selector: 'app-root',
+  providers: [
+    { provide: NG_FLUTTER_STORE_RED, useClass: NgFlutterStore },
+    { provide: NG_FLUTTER_STORE_BLUE, useClass: NgFlutterStore },
+  ],
   template: `
 <mat-toolbar color="primary">
   <button
@@ -34,20 +37,16 @@ type FlutterInstanceKey = 'red' | 'blue';
   <mat-sidenav #drawer mode="side" [opened]=true class="sidenav">
     <mat-nav-list autosize>
       <app-flutter-effects-section identifier="🔴" [containerRef]="containerRed" />
-      @if (ngFlutterStateControllerRed) {
-        <app-flutter-js-interop-section
-          identifier="🔴"
-          [flutterStateController]="ngFlutterStateControllerRed"
-        />
-      }
+      <app-flutter-js-interop-section
+        identifier="🔴"
+        [store]="storeRed"
+      />
       <mat-divider class="section-divider"></mat-divider>
       <app-flutter-effects-section identifier="🔵" [containerRef]="containerBlue" />
-      @if (ngFlutterStateControllerBlue){
-        <app-flutter-js-interop-section
-          identifier="🔵"
-          [flutterStateController]="ngFlutterStateControllerBlue"
-        />
-      }
+      <app-flutter-js-interop-section
+        identifier="🔵"
+        [store]="storeBlue"
+      />
     </mat-nav-list>
   </mat-sidenav>
 
@@ -55,14 +54,14 @@ type FlutterInstanceKey = 'red' | 'blue';
     <div class="flutter-app" #containerRed>
       <ng-flutter
         targetId="🔴"
-        (onStateControllerReady)="onFlutterAppLoaded($event, 'red')"
+        [store]="storeRed"
       >
       </ng-flutter>
     </div>
     <div class="flutter-app" #containerBlue>
       <ng-flutter
         targetId="🔵"
-        (onStateControllerReady)="onFlutterAppLoaded($event, 'blue')"
+        [store]="storeBlue"
       >
       </ng-flutter>
     </div>
@@ -121,56 +120,9 @@ type FlutterInstanceKey = 'red' | 'blue';
   ],
 })
 export class AppComponent {
-  ngFlutterStateControllerRed?: NgFlutterStateController;
-  ngFlutterStateControllerBlue?: NgFlutterStateController;
-
   @ViewChild('containerRed') containerRed!: ElementRef<HTMLElement>;
   @ViewChild('containerBlue') containerBlue!: ElementRef<HTMLElement>;
 
-  constructor(private changeDetectorRef: ChangeDetectorRef) { }
-
-  private getState(key: FlutterInstanceKey): (NgFlutterStateController | undefined) {
-    switch (key) {
-      case 'red':
-        return this.ngFlutterStateControllerRed;
-      case 'blue':
-        return this.ngFlutterStateControllerBlue;
-    }
-  }
-
-  onFlutterAppLoaded(state: NgFlutterStateController, key: FlutterInstanceKey): void {
-    switch (key) {
-      case 'red':
-        this.ngFlutterStateControllerRed = state;
-        break;
-      case 'blue':
-        this.ngFlutterStateControllerBlue = state;
-        break;
-    }
-
-
-    // Need to force a change detection here.
-    //
-    // When clicking on any interactive element, everything works fine, but
-    // clicking on Flutter doesn't trigger a repaint (even though this method is
-    // called)
-    this.changeDetectorRef.detectChanges();
-    state.onClicksChanged?.(() => this.changeDetectorRef.detectChanges());
-    state.onTextChanged?.(() => this.changeDetectorRef.detectChanges());
-  }
-
-  onScreenSet(value: string, key: FlutterInstanceKey): void {
-    const state = this.getState(key);
-    if (state) state.screen = value;
-  }
-
-  onCounterSet(clicks: number, key: FlutterInstanceKey): void {
-    const state = this.getState(key);
-    if (state) state.clicks = clicks;
-  }
-
-  onTextSet(text: string, key: FlutterInstanceKey): void {
-    const state = this.getState(key);
-    if (state) state.text = text;
-  }
+  storeRed = inject(NG_FLUTTER_STORE_RED);
+  storeBlue = inject(NG_FLUTTER_STORE_BLUE);
 }

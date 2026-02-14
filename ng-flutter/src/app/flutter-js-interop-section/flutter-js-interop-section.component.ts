@@ -1,9 +1,10 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { NgFlutterStore } from './ng-flutter-store';
 
 export type FlutterState = {
   screen?: string;
@@ -23,24 +24,24 @@ export type FlutterState = {
       <mat-form-field appearance="outline">
         <mat-label>Screen</mat-label>
         <mat-select
-            (valueChange)="flutterStateController.screen = $event"
-            [value]="flutterStateController.screen">
+            (valueChange)="store.setScreen($event)"
+            [value]="store.screen()">
           <mat-option value="counter">Counter</mat-option>
           <mat-option value="text">TextField</mat-option>
           <mat-option value="dash">Custom App</mat-option>
         </mat-select>
       </mat-form-field>
-      @if (flutterStateController.screen === 'counter') {
+      @if (store.screen() === 'counter') {
         <mat-form-field appearance="outline">
           <mat-label>Clicks</mat-label>
-          <input type="number" matInput (input)="onCounterInput($event)" [value]="flutterStateController.clicks" />
+          <input type="number" matInput (input)="onCounterInput($event)" [value]="store.clicks()" />
         </mat-form-field>
       } @else {
         <mat-form-field appearance="outline">
           <mat-label>Text</mat-label>
-          <input type="text" matInput (input)="onTextInput($event)" [value]="flutterStateController.text" />
-          @if (flutterStateController.text) {
-            <button matSuffix mat-icon-button aria-label="Clear" (click)="flutterStateController.setText('')">
+          <input type="text" matInput (input)="onTextInput($event)" [value]="store.text()" />
+          @if (store.text()) {
+            <button matSuffix mat-icon-button aria-label="Clear" (click)="store.setText('')">
               <mat-icon>close</mat-icon>
             </button>
           }
@@ -58,15 +59,15 @@ export type FlutterState = {
 })
 export class FlutterJsInteropSectionComponent {
   @Input() identifier?: string;
-  @Input({required: true}) flutterStateController!: NgFlutterStateController;
+  @Input({ required: true }) store!: NgFlutterStore;
 
   onCounterInput(event: Event): void {
     const clicks = parseInt((event.target as HTMLInputElement).value, 10) || 0;
-    this.flutterStateController.clicks = clicks;
+    this.store.setClicks(clicks);
   }
 
   onTextInput(event: Event): void {
     const text = (event.target as HTMLInputElement).value || '';
-    this.flutterStateController.text = text;
+    this.store.setText(text);
   }
 }
