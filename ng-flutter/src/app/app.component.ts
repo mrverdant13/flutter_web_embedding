@@ -121,9 +121,9 @@ import { MatInputModule } from '@angular/material/input';
   ],
 })
 export class AppComponent {
-  @ViewChild('containerRed') containerRed!: ElementRef<HTMLElement>;
-  @ViewChild('containerBlue') containerBlue!: ElementRef<HTMLElement>;
-  @ViewChild('drawer') drawer!: MatSidenav;
+  @ViewChild('containerRed') readonly containerRed!: ElementRef<HTMLElement>;
+  @ViewChild('containerBlue') readonly containerBlue!: ElementRef<HTMLElement>;
+  @ViewChild('drawer') readonly drawer!: MatSidenav;
 
   readonly storeRed = inject(NG_FLUTTER_STORE_RED);
   readonly storeBlue = inject(NG_FLUTTER_STORE_BLUE);
