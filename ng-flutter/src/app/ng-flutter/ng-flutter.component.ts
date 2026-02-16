@@ -51,6 +51,7 @@ export class NgFlutterComponent implements AfterViewInit, OnDestroy {
       this.stateController.text = text;
     });
   }
+
   async ngAfterViewInit(): Promise<void> {
     const target = document.getElementById(this.targetId);
     if (!target) {

@@ -123,6 +123,6 @@ export class AppComponent {
   @ViewChild('containerRed') containerRed!: ElementRef<HTMLElement>;
   @ViewChild('containerBlue') containerBlue!: ElementRef<HTMLElement>;
 
-  storeRed = inject(NG_FLUTTER_STORE_RED);
-  storeBlue = inject(NG_FLUTTER_STORE_BLUE);
+  readonly storeRed = inject(NG_FLUTTER_STORE_RED);
+  readonly storeBlue = inject(NG_FLUTTER_STORE_BLUE);
 }
