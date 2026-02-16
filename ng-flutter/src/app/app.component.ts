@@ -1,4 +1,4 @@
-import { Component, ElementRef, inject, ViewChild } from '@angular/core';
+import { Component, ElementRef, inject, viewChild } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
 import { NgFlutterComponent } from './ng-flutter/ng-flutter.component';
 import { FlutterEffectsSectionComponent } from './flutter-effects-section/flutter-effects-section.component';
@@ -37,13 +37,13 @@ import { MatInputModule } from '@angular/material/input';
 <mat-sidenav-container [hasBackdrop]=false class="sidenav-container">
   <mat-sidenav #drawer mode="side" [opened]=true class="sidenav">
     <mat-nav-list autosize>
-      <app-flutter-effects-section identifier="🔴" [containerRef]="containerRed" />
+      <app-flutter-effects-section identifier="🔴" [containerRef]="containerRedRef()" />
       <app-flutter-js-interop-section
         identifier="🔴"
         [ngFlutterStore]="storeRed"
       />
       <mat-divider class="section-divider"></mat-divider>
-      <app-flutter-effects-section identifier="🔵" [containerRef]="containerBlue" />
+      <app-flutter-effects-section identifier="🔵" [containerRef]="containerBlueRef()" />
       <app-flutter-js-interop-section
         identifier="🔵"
         [ngFlutterStore]="storeBlue"
@@ -126,11 +126,11 @@ import { MatInputModule } from '@angular/material/input';
  */
 export class AppComponent {
   /** Reference to the red Flutter container element in the sidenav content area. */
-  @ViewChild('containerRed') readonly containerRed!: ElementRef<HTMLElement>;
+  readonly containerRedRef = viewChild<ElementRef<HTMLElement>>('containerRed');
   /** Reference to the blue Flutter container element in the sidenav content area. */
-  @ViewChild('containerBlue') readonly containerBlue!: ElementRef<HTMLElement>;
+  readonly containerBlueRef = viewChild<ElementRef<HTMLElement>>('containerBlue');
   /** Reference to the sidenav drawer for programmatic toggle. */
-  @ViewChild('drawer') readonly drawer!: MatSidenav;
+  readonly drawer = viewChild<MatSidenav>('drawer');
 
   /** Store instance managing state for the red Flutter view. */
   readonly storeRed = inject(NG_FLUTTER_STORE_RED);
@@ -138,6 +138,6 @@ export class AppComponent {
   readonly storeBlue = inject(NG_FLUTTER_STORE_BLUE);
 
   protected toggleSidenav(): void {
-    this.drawer.toggle();
+    this.drawer()?.toggle();
   }
 }
