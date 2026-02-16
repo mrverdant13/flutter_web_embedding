@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
@@ -28,23 +28,23 @@ export type FlutterState = {
       <mat-form-field appearance="outline">
         <mat-label>Screen</mat-label>
         <mat-select
-            (valueChange)="store.setScreen($event)"
-            [value]="store.screen()">
+            (valueChange)="store().setScreen($event)"
+            [value]="store().screen()">
           <mat-option value="counter">Counter</mat-option>
           <mat-option value="text">TextField</mat-option>
           <mat-option value="dash">Custom App</mat-option>
         </mat-select>
       </mat-form-field>
-      @if (store.screen() === 'counter') {
+      @if (store().screen() === 'counter') {
         <mat-form-field appearance="outline">
           <mat-label>Clicks</mat-label>
-          <input type="number" matInput (input)="applyCounterFromInput($event)" [value]="store.clicks()" />
+          <input type="number" matInput (input)="applyCounterFromInput($event)" [value]="store().clicks()" />
         </mat-form-field>
       } @else {
         <mat-form-field appearance="outline">
           <mat-label>Text</mat-label>
-          <input type="text" matInput (input)="applyTextFromInput($event)" [value]="store.text()" />
-          @if (store.text()) {
+          <input type="text" matInput (input)="applyTextFromInput($event)" [value]="store().text()" />
+          @if (store().text()) {
             <button matSuffix mat-icon-button aria-label="Clear" (click)="clearText()">
               <mat-icon>close</mat-icon>
             </button>
@@ -62,22 +62,23 @@ export type FlutterState = {
   ],
 })
 export class FlutterJsInteropSectionComponent {
-  @Input() identifier?: string;
-  @Input({ required: true }) store!: NgFlutterStore;
+  readonly identifier = input<string>();
+  readonly store = input.required<NgFlutterStore>();
 
   protected get sectionTitle(): string {
-    return (this.identifier ? this.identifier + ' ' : '') + 'JS Interop';
+    const identifier = this.identifier();
+    return (identifier ? identifier + ' ' : '') + 'JS Interop';
   }
 
   protected applyCounterFromInput(event: Event): void {
-    this.store.setClicks(parseCounterValueFromInput(event));
+    this.store().setClicks(parseCounterValueFromInput(event));
   }
 
   protected applyTextFromInput(event: Event): void {
-    this.store.setText(parseTextValueFromInput(event));
+    this.store().setText(parseTextValueFromInput(event));
   }
 
   protected clearText(): void {
-    this.store.setText('');
+    this.store().setText('');
   }
 }

@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, Input, OnDestroy, effect } from '@angular/core';
+import { Component, AfterViewInit, OnDestroy, effect, input } from '@angular/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { NgFlutterStore } from '../flutter-js-interop-section/ng-flutter-store';
 
@@ -6,7 +6,7 @@ import { NgFlutterStore } from '../flutter-js-interop-section/ng-flutter-store';
   selector: 'ng-flutter',
   standalone: true,
   template: `
-  <div #flutterTarget [id]="targetId">
+  <div #flutterTarget [id]="targetId()">
     <div class="spinner">
       <mat-spinner></mat-spinner>
     </div>
@@ -28,25 +28,25 @@ import { NgFlutterStore } from '../flutter-js-interop-section/ng-flutter-store';
   ],
 })
 export class NgFlutterComponent implements AfterViewInit, OnDestroy {
-  @Input({ required: true }) targetId!: string;
-  @Input({ required: true }) store!: NgFlutterStore;
+  readonly targetId = input.required<string>();
+  readonly store = input.required<NgFlutterStore>();
 
   viewId?: number;
   stateController?: NgFlutterStateController;
 
   constructor() {
     effect(() => {
-      const screen = this.store.screen();
+      const screen = this.store().screen();
       if (!this.stateController) return;
       this.stateController.screen = screen;
     });
     effect(() => {
-      const clicks = this.store.clicks();
+      const clicks = this.store().clicks();
       if (!this.stateController) return;
       this.stateController.clicks = clicks;
     });
     effect(() => {
-      const text = this.store.text();
+      const text = this.store().text();
       if (!this.stateController) return;
       this.stateController.text = text;
     });
@@ -61,9 +61,9 @@ export class NgFlutterComponent implements AfterViewInit, OnDestroy {
   }
 
   private async mountFlutterView(): Promise<void> {
-    const target = document.getElementById(this.targetId);
+    const target = document.getElementById(this.targetId());
     if (!target) {
-      throw new Error(`Target element with id ${this.targetId} not found`);
+      throw new Error(`Target element with id ${this.targetId()} not found`);
     }
 
     await _ngFlutter.initMultiViewApp();
@@ -71,15 +71,15 @@ export class NgFlutterComponent implements AfterViewInit, OnDestroy {
     this.viewId = await _ngFlutter.addView(
       target,
       {
-        targetElementId: this.targetId,
+        targetElementId: this.targetId(),
       },
       (state: NgFlutterStateController) => {
         this.stateController = state;
         state.onClicksChanged(() => {
-          this.store.setClicks(state.clicks);
+          this.store().setClicks(state.clicks);
         });
         state.onTextChanged(() => {
-          this.store.setText(state.text);
+          this.store().setText(state.text);
         });
       },
     );

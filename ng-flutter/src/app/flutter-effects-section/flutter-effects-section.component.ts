@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input } from '@angular/core';
+import { Component, ElementRef, input } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { resolveContainerElement } from './container-element-resolver';
 
@@ -34,14 +34,15 @@ import { resolveContainerElement } from './container-element-resolver';
   imports: [MatButtonModule],
 })
 export class FlutterEffectsSectionComponent {
-  @Input() identifier?: string;
-  @Input() containerRef?: ElementRef<HTMLElement> | HTMLElement;
+  readonly identifier = input<string>();
+  readonly containerRef = input<ElementRef<HTMLElement> | HTMLElement>();
 
   protected get sectionTitle(): string {
-    return (this.identifier ? this.identifier + ' ' : '') + 'Effects';
+    const identifier = this.identifier();
+    return (identifier ? identifier + ' ' : '') + 'Effects';
   }
 
   protected toggleEffect(className: string): void {
-    resolveContainerElement(this.containerRef)?.classList.toggle(className);
+    resolveContainerElement(this.containerRef())?.classList.toggle(className);
   }
 }
