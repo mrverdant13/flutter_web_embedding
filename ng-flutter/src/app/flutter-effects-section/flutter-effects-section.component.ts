@@ -1,6 +1,6 @@
 import { Component, ElementRef, computed, input } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { resolveContainerElement } from './container-element-resolver';
+import { resolveContainerElement } from './resolve-container-element';
 
 @Component({
   standalone: true,
