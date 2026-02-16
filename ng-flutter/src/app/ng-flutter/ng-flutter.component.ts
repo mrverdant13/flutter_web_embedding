@@ -29,30 +29,30 @@ import { NgFlutterStore } from '../flutter-js-interop-section/ng-flutter-store';
 })
 /**
  * Embeds a Flutter view into an Angular template.
- * Mounts the Flutter app in an element identified by {@link targetId} and syncs state with the provided store.
+ * Mounts the Flutter app in an element identified by {@link targetId} and syncs state with the provided {@link ngFlutterStore}.
  */
 export class NgFlutterComponent implements AfterViewInit, OnDestroy {
   /** DOM id of the host element where the Flutter view will be mounted. */
   readonly targetId = input.required<string>();
-  /** Store used to sync screen, clicks, and text state between Angular and Flutter. */
-  readonly store = input.required<NgFlutterStore>();
+  /** NgFlutter store used to sync screen, clicks, and text state between Angular and Flutter. */
+  readonly ngFlutterStore = input.required<NgFlutterStore>();
 
   viewId?: number;
   stateController?: NgFlutterStateController;
 
   constructor() {
     effect(() => {
-      const screen = this.store().screen();
+      const screen = this.ngFlutterStore().screen();
       if (!this.stateController) return;
       this.stateController.screen = screen;
     });
     effect(() => {
-      const clicks = this.store().clicks();
+      const clicks = this.ngFlutterStore().clicks();
       if (!this.stateController) return;
       this.stateController.clicks = clicks;
     });
     effect(() => {
-      const text = this.store().text();
+      const text = this.ngFlutterStore().text();
       if (!this.stateController) return;
       this.stateController.text = text;
     });
@@ -82,10 +82,10 @@ export class NgFlutterComponent implements AfterViewInit, OnDestroy {
       (state: NgFlutterStateController) => {
         this.stateController = state;
         state.onClicksChanged(() => {
-          this.store().setClicks(state.clicks);
+          this.ngFlutterStore().setClicks(state.clicks);
         });
         state.onTextChanged(() => {
-          this.store().setText(state.text);
+          this.ngFlutterStore().setText(state.text);
         });
       },
     );

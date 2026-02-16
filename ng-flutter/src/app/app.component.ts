@@ -40,13 +40,13 @@ import { MatInputModule } from '@angular/material/input';
       <app-flutter-effects-section identifier="🔴" [containerRef]="containerRed" />
       <app-flutter-js-interop-section
         identifier="🔴"
-        [store]="storeRed"
+        [ngFlutterStore]="storeRed"
       />
       <mat-divider class="section-divider"></mat-divider>
       <app-flutter-effects-section identifier="🔵" [containerRef]="containerBlue" />
       <app-flutter-js-interop-section
         identifier="🔵"
-        [store]="storeBlue"
+        [ngFlutterStore]="storeBlue"
       />
     </mat-nav-list>
   </mat-sidenav>
@@ -55,14 +55,14 @@ import { MatInputModule } from '@angular/material/input';
     <div class="flutter-app" #containerRed>
       <ng-flutter
         targetId="🔴"
-        [store]="storeRed"
+        [ngFlutterStore]="storeRed"
       >
       </ng-flutter>
     </div>
     <div class="flutter-app" #containerBlue>
       <ng-flutter
         targetId="🔵"
-        [store]="storeBlue"
+        [ngFlutterStore]="storeBlue"
       >
       </ng-flutter>
     </div>

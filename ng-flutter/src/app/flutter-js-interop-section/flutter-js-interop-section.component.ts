@@ -29,23 +29,23 @@ export type FlutterState = {
       <mat-form-field appearance="outline">
         <mat-label>Screen</mat-label>
         <mat-select
-            (valueChange)="store().setScreen($event)"
-            [value]="store().screen()">
+            (valueChange)="ngFlutterStore().setScreen($event)"
+            [value]="ngFlutterStore().screen()">
           <mat-option value="counter">Counter</mat-option>
           <mat-option value="text">TextField</mat-option>
           <mat-option value="dash">Custom App</mat-option>
         </mat-select>
       </mat-form-field>
-      @if (store().screen() === 'counter') {
+      @if (ngFlutterStore().screen() === 'counter') {
         <mat-form-field appearance="outline">
           <mat-label>Clicks</mat-label>
-          <input type="number" matInput (input)="applyCounterFromInput($event)" [value]="store().clicks()" />
+          <input type="number" matInput (input)="applyCounterFromInput($event)" [value]="ngFlutterStore().clicks()" />
         </mat-form-field>
       } @else {
         <mat-form-field appearance="outline">
           <mat-label>Text</mat-label>
-          <input type="text" matInput (input)="applyTextFromInput($event)" [value]="store().text()" />
-          @if (store().text()) {
+          <input type="text" matInput (input)="applyTextFromInput($event)" [value]="ngFlutterStore().text()" />
+          @if (ngFlutterStore().text()) {
             <button matSuffix mat-icon-button aria-label="Clear" (click)="clearText()">
               <mat-icon>close</mat-icon>
             </button>
@@ -69,8 +69,8 @@ export type FlutterState = {
 export class FlutterJsInteropSectionComponent {
   /** Optional emoji or label prefix shown in the section title (e.g. 🔴 or 🔵). */
   readonly identifier = input<string>();
-  /** Store that drives the associated Flutter view's state. */
-  readonly store = input.required<NgFlutterStore>();
+  /** NgFlutter store that drives the associated Flutter view's state. */
+  readonly ngFlutterStore = input.required<NgFlutterStore>();
 
   protected readonly sectionTitle = computed(() => {
     const identifier = this.identifier();
@@ -78,14 +78,14 @@ export class FlutterJsInteropSectionComponent {
   });
 
   protected applyCounterFromInput(event: Event): void {
-    this.store().setClicks(parseCounterValueFromInput(event));
+    this.ngFlutterStore().setClicks(parseCounterValueFromInput(event));
   }
 
   protected applyTextFromInput(event: Event): void {
-    this.store().setText(parseTextValueFromInput(event));
+    this.ngFlutterStore().setText(parseTextValueFromInput(event));
   }
 
   protected clearText(): void {
-    this.store().setText('');
+    this.ngFlutterStore().setText('');
   }
 }
