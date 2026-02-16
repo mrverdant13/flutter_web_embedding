@@ -10,6 +10,7 @@ import {
   parseTextValueFromInput,
 } from './input-value-parsers';
 
+/** Shape of state and callbacks exposed by the Flutter JS interop layer. */
 export type FlutterState = {
   screen?: string;
   clicks?: number;
@@ -61,8 +62,14 @@ export type FlutterState = {
     MatButtonModule,
   ],
 })
+/**
+ * Section component providing JS interop controls for a Flutter view.
+ * Lets users switch screens (counter, text, custom app) and edit counter/text values.
+ */
 export class FlutterJsInteropSectionComponent {
+  /** Optional emoji or label prefix shown in the section title (e.g. 🔴 or 🔵). */
   readonly identifier = input<string>();
+  /** Store that drives the associated Flutter view's state. */
   readonly store = input.required<NgFlutterStore>();
 
   protected readonly sectionTitle = computed(() => {

@@ -27,8 +27,14 @@ import { NgFlutterStore } from '../flutter-js-interop-section/ng-flutter-store';
     MatProgressSpinnerModule,
   ],
 })
+/**
+ * Embeds a Flutter view into an Angular template.
+ * Mounts the Flutter app in an element identified by {@link targetId} and syncs state with the provided store.
+ */
 export class NgFlutterComponent implements AfterViewInit, OnDestroy {
+  /** DOM id of the host element where the Flutter view will be mounted. */
   readonly targetId = input.required<string>();
+  /** Store used to sync screen, clicks, and text state between Angular and Flutter. */
   readonly store = input.required<NgFlutterStore>();
 
   viewId?: number;

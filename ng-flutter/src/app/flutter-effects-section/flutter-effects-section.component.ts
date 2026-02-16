@@ -33,8 +33,14 @@ import { resolveContainerElement } from './container-element-resolver';
   `],
   imports: [MatButtonModule],
 })
+/**
+ * Section component providing effect toggles (shadow, mirror, resize, spin) for a Flutter container.
+ * Applies CSS classes to the referenced container element.
+ */
 export class FlutterEffectsSectionComponent {
+  /** Optional emoji or label prefix shown in the section title (e.g. 🔴 or 🔵). */
   readonly identifier = input<string>();
+  /** Reference to the Flutter container element whose class list is modified by the effect buttons. */
   readonly containerRef = input<ElementRef<HTMLElement> | HTMLElement>();
 
   protected readonly sectionTitle = computed(() => {

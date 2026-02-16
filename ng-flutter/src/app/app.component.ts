@@ -120,12 +120,21 @@ import { MatInputModule } from '@angular/material/input';
     MatInputModule
   ],
 })
+/**
+ * Root application component hosting the Angular–Flutter integration demo.
+ * Provides a sidenav layout with two Flutter view instances (red and blue) and their control panels.
+ */
 export class AppComponent {
+  /** Reference to the red Flutter container element in the sidenav content area. */
   @ViewChild('containerRed') readonly containerRed!: ElementRef<HTMLElement>;
+  /** Reference to the blue Flutter container element in the sidenav content area. */
   @ViewChild('containerBlue') readonly containerBlue!: ElementRef<HTMLElement>;
+  /** Reference to the sidenav drawer for programmatic toggle. */
   @ViewChild('drawer') readonly drawer!: MatSidenav;
 
+  /** Store instance managing state for the red Flutter view. */
   readonly storeRed = inject(NG_FLUTTER_STORE_RED);
+  /** Store instance managing state for the blue Flutter view. */
   readonly storeBlue = inject(NG_FLUTTER_STORE_BLUE);
 
   protected toggleSidenav(): void {
