@@ -1,4 +1,4 @@
-import { Component, ElementRef, input } from '@angular/core';
+import { Component, ElementRef, computed, input } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { resolveContainerElement } from './container-element-resolver';
 
@@ -7,7 +7,7 @@ import { resolveContainerElement } from './container-element-resolver';
   selector: 'app-flutter-effects-section',
   template: `
     <section>
-      <h2>{{ sectionTitle }}</h2>
+      <h2>{{ sectionTitle() }}</h2>
       <div class="button-list">
         <button class="mb-control" mat-stroked-button color="primary"
             (click)="toggleEffect('fx-shadow')">Shadow</button>
@@ -37,10 +37,10 @@ export class FlutterEffectsSectionComponent {
   readonly identifier = input<string>();
   readonly containerRef = input<ElementRef<HTMLElement> | HTMLElement>();
 
-  protected get sectionTitle(): string {
+  protected readonly sectionTitle = computed(() => {
     const identifier = this.identifier();
     return (identifier ? identifier + ' ' : '') + 'Effects';
-  }
+  });
 
   protected toggleEffect(className: string): void {
     resolveContainerElement(this.containerRef())?.classList.toggle(className);

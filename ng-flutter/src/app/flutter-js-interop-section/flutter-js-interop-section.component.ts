@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, computed, input } from '@angular/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
@@ -24,7 +24,7 @@ export type FlutterState = {
   selector: 'app-flutter-js-interop-section',
   template: `
     <section>
-      <h2>{{ sectionTitle }}</h2>
+      <h2>{{ sectionTitle() }}</h2>
       <mat-form-field appearance="outline">
         <mat-label>Screen</mat-label>
         <mat-select
@@ -65,10 +65,10 @@ export class FlutterJsInteropSectionComponent {
   readonly identifier = input<string>();
   readonly store = input.required<NgFlutterStore>();
 
-  protected get sectionTitle(): string {
+  protected readonly sectionTitle = computed(() => {
     const identifier = this.identifier();
     return (identifier ? identifier + ' ' : '') + 'JS Interop';
-  }
+  });
 
   protected applyCounterFromInput(event: Event): void {
     this.store().setClicks(parseCounterValueFromInput(event));
