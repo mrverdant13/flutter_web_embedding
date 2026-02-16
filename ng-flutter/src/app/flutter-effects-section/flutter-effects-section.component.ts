@@ -6,7 +6,7 @@ import { MatButtonModule } from '@angular/material/button';
   selector: 'app-flutter-effects-section',
   template: `
     <section>
-      <h2>{{ (identifier ? identifier + ' ' : '') + 'Effects' }}</h2>
+      <h2>{{ sectionTitle }}</h2>
       <div class="button-list">
         <button class="mb-control" mat-stroked-button color="primary"
             (click)="toggleClass('fx-shadow')">Shadow</button>
@@ -35,6 +35,10 @@ import { MatButtonModule } from '@angular/material/button';
 export class FlutterEffectsSectionComponent {
   @Input() identifier?: string;
   @Input() containerRef?: ElementRef<HTMLElement> | HTMLElement;
+
+  protected get sectionTitle(): string {
+    return (this.identifier ? this.identifier + ' ' : '') + 'Effects';
+  }
 
   private get container(): HTMLElement | undefined {
     if (!this.containerRef) return undefined;

@@ -20,7 +20,7 @@ export type FlutterState = {
   selector: 'app-flutter-js-interop-section',
   template: `
     <section>
-      <h2>{{ (identifier ? identifier + ' ' : '') + 'JS Interop' }}</h2>
+      <h2>{{ sectionTitle }}</h2>
       <mat-form-field appearance="outline">
         <mat-label>Screen</mat-label>
         <mat-select
@@ -60,6 +60,10 @@ export type FlutterState = {
 export class FlutterJsInteropSectionComponent {
   @Input() identifier?: string;
   @Input({ required: true }) store!: NgFlutterStore;
+
+  protected get sectionTitle(): string {
+    return (this.identifier ? this.identifier + ' ' : '') + 'JS Interop';
+  }
 
   protected onCounterInput(event: Event): void {
     const clicks = parseInt((event.target as HTMLInputElement).value, 10) || 0;
