@@ -53,13 +53,20 @@ export class NgFlutterComponent implements AfterViewInit, OnDestroy {
   }
 
   async ngAfterViewInit(): Promise<void> {
+    await this.mountFlutterView();
+  }
+
+  async ngOnDestroy(): Promise<void> {
+    await this.removeFlutterView();
+  }
+
+  private async mountFlutterView(): Promise<void> {
     const target = document.getElementById(this.targetId);
     if (!target) {
       throw new Error(`Target element with id ${this.targetId} not found`);
     }
 
     await _ngFlutter.initMultiViewApp();
-
 
     this.viewId = await _ngFlutter.addView(
       target,
@@ -78,7 +85,7 @@ export class NgFlutterComponent implements AfterViewInit, OnDestroy {
     );
   }
 
-  async ngOnDestroy(): Promise<void> {
+  private async removeFlutterView(): Promise<void> {
     if (!this.viewId) return;
     await _ngFlutter.removeView(this.viewId);
   }
