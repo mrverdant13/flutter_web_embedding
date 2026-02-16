@@ -61,12 +61,12 @@ export class FlutterJsInteropSectionComponent {
   @Input() identifier?: string;
   @Input({ required: true }) store!: NgFlutterStore;
 
-  onCounterInput(event: Event): void {
+  protected onCounterInput(event: Event): void {
     const clicks = parseInt((event.target as HTMLInputElement).value, 10) || 0;
     this.store.setClicks(clicks);
   }
 
-  onTextInput(event: Event): void {
+  protected onTextInput(event: Event): void {
     const text = (event.target as HTMLInputElement).value || '';
     this.store.setText(text);
   }

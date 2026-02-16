@@ -43,7 +43,7 @@ export class FlutterEffectsSectionComponent {
       : this.containerRef;
   }
 
-  toggleClass(className: string): void {
+  protected toggleClass(className: string): void {
     this.container?.classList.toggle(className);
   }
 }
