@@ -1,4 +1,5 @@
 import { Component, ElementRef, inject, ViewChild } from '@angular/core';
+import { MatSidenav } from '@angular/material/sidenav';
 import { NgFlutterComponent } from './ng-flutter/ng-flutter.component';
 import { FlutterEffectsSectionComponent } from './flutter-effects-section/flutter-effects-section.component';
 import { FlutterJsInteropSectionComponent } from './flutter-js-interop-section/flutter-js-interop-section.component';
@@ -26,7 +27,7 @@ import { MatInputModule } from '@angular/material/input';
   <button
     aria-label="Toggle sidenav"
     mat-icon-button
-    (click)="drawer.toggle()">
+    (click)="toggleSidenav()">
     <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
   </button>
   <span>Angular 🤝 Flutter</span>
@@ -122,7 +123,12 @@ import { MatInputModule } from '@angular/material/input';
 export class AppComponent {
   @ViewChild('containerRed') containerRed!: ElementRef<HTMLElement>;
   @ViewChild('containerBlue') containerBlue!: ElementRef<HTMLElement>;
+  @ViewChild('drawer') drawer!: MatSidenav;
 
   readonly storeRed = inject(NG_FLUTTER_STORE_RED);
   readonly storeBlue = inject(NG_FLUTTER_STORE_BLUE);
+
+  protected toggleSidenav(): void {
+    this.drawer.toggle();
+  }
 }

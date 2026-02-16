@@ -10,13 +10,13 @@ import { resolveContainerElement } from './container-element-resolver';
       <h2>{{ sectionTitle }}</h2>
       <div class="button-list">
         <button class="mb-control" mat-stroked-button color="primary"
-            (click)="toggleClass('fx-shadow')">Shadow</button>
+            (click)="toggleEffect('fx-shadow')">Shadow</button>
         <button class="mb-control" mat-stroked-button color="primary"
-            (click)="toggleClass('fx-mirror')">Mirror</button>
+            (click)="toggleEffect('fx-mirror')">Mirror</button>
         <button class="mb-control" mat-stroked-button color="primary"
-            (click)="toggleClass('fx-resize')">Resize</button>
+            (click)="toggleEffect('fx-resize')">Resize</button>
         <button class="mb-control" mat-stroked-button color="primary"
-            (click)="toggleClass('fx-spin')">Spin</button>
+            (click)="toggleEffect('fx-spin')">Spin</button>
       </div>
     </section>
   `,
@@ -41,7 +41,7 @@ export class FlutterEffectsSectionComponent {
     return (this.identifier ? this.identifier + ' ' : '') + 'Effects';
   }
 
-  protected toggleClass(className: string): void {
+  protected toggleEffect(className: string): void {
     resolveContainerElement(this.containerRef)?.classList.toggle(className);
   }
 }

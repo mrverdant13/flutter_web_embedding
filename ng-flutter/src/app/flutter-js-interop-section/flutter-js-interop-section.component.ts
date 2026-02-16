@@ -38,14 +38,14 @@ export type FlutterState = {
       @if (store.screen() === 'counter') {
         <mat-form-field appearance="outline">
           <mat-label>Clicks</mat-label>
-          <input type="number" matInput (input)="onCounterInput($event)" [value]="store.clicks()" />
+          <input type="number" matInput (input)="applyCounterFromInput($event)" [value]="store.clicks()" />
         </mat-form-field>
       } @else {
         <mat-form-field appearance="outline">
           <mat-label>Text</mat-label>
-          <input type="text" matInput (input)="onTextInput($event)" [value]="store.text()" />
+          <input type="text" matInput (input)="applyTextFromInput($event)" [value]="store.text()" />
           @if (store.text()) {
-            <button matSuffix mat-icon-button aria-label="Clear" (click)="store.setText('')">
+            <button matSuffix mat-icon-button aria-label="Clear" (click)="clearText()">
               <mat-icon>close</mat-icon>
             </button>
           }
@@ -69,11 +69,15 @@ export class FlutterJsInteropSectionComponent {
     return (this.identifier ? this.identifier + ' ' : '') + 'JS Interop';
   }
 
-  protected onCounterInput(event: Event): void {
+  protected applyCounterFromInput(event: Event): void {
     this.store.setClicks(parseCounterValueFromInput(event));
   }
 
-  protected onTextInput(event: Event): void {
+  protected applyTextFromInput(event: Event): void {
     this.store.setText(parseTextValueFromInput(event));
+  }
+
+  protected clearText(): void {
+    this.store.setText('');
   }
 }
