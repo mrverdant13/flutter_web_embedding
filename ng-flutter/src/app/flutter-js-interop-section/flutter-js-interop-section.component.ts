@@ -5,6 +5,10 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { NgFlutterStore } from './ng-flutter-store';
+import {
+  parseCounterValueFromInput,
+  parseTextValueFromInput,
+} from './input-value-parsers';
 
 export type FlutterState = {
   screen?: string;
@@ -66,12 +70,10 @@ export class FlutterJsInteropSectionComponent {
   }
 
   protected onCounterInput(event: Event): void {
-    const clicks = parseInt((event.target as HTMLInputElement).value, 10) || 0;
-    this.store.setClicks(clicks);
+    this.store.setClicks(parseCounterValueFromInput(event));
   }
 
   protected onTextInput(event: Event): void {
-    const text = (event.target as HTMLInputElement).value || '';
-    this.store.setText(text);
+    this.store.setText(parseTextValueFromInput(event));
   }
 }

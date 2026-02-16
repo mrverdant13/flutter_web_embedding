@@ -1,5 +1,6 @@
 import { Component, ElementRef, Input } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
+import { resolveContainerElement } from './container-element-resolver';
 
 @Component({
   standalone: true,
@@ -40,14 +41,7 @@ export class FlutterEffectsSectionComponent {
     return (this.identifier ? this.identifier + ' ' : '') + 'Effects';
   }
 
-  private get container(): HTMLElement | undefined {
-    if (!this.containerRef) return undefined;
-    return this.containerRef instanceof ElementRef
-      ? this.containerRef.nativeElement
-      : this.containerRef;
-  }
-
   protected toggleClass(className: string): void {
-    this.container?.classList.toggle(className);
+    resolveContainerElement(this.containerRef)?.classList.toggle(className);
   }
 }
