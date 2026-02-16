@@ -39,12 +39,18 @@ export type FlutterState = {
       @if (ngFlutterStore().screen() === 'counter') {
         <mat-form-field appearance="outline">
           <mat-label>Clicks</mat-label>
-          <input type="number" matInput (input)="applyCounterFromInput($event)" [value]="ngFlutterStore().clicks()" />
+          <input type="number" matInput
+            (input)="applyCounterFromInput($event)"
+            (keydown.enter)="blurCounterInput($event)"
+            [value]="ngFlutterStore().clicks()" />
         </mat-form-field>
       } @else {
         <mat-form-field appearance="outline">
           <mat-label>Text</mat-label>
-          <input type="text" matInput (input)="applyTextFromInput($event)" [value]="ngFlutterStore().text()" />
+          <input type="text" matInput
+            (input)="applyTextFromInput($event)"
+            (keydown.escape)="clearText()"
+            [value]="ngFlutterStore().text()" />
           @if (ngFlutterStore().text()) {
             <button matSuffix mat-icon-button aria-label="Clear" (click)="clearText()">
               <mat-icon>close</mat-icon>
@@ -79,6 +85,10 @@ export class FlutterJsInteropSectionComponent {
 
   protected applyCounterFromInput(event: Event): void {
     this.ngFlutterStore().setClicks(parseCounterValueFromInput(event));
+  }
+
+  protected blurCounterInput(event: Event): void {
+    (event.target as HTMLInputElement).blur();
   }
 
   protected applyTextFromInput(event: Event): void {
