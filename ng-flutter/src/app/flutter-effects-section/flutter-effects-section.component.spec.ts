@@ -39,9 +39,7 @@ describe('FlutterEffectsSectionComponent', () => {
     fixture.componentRef.setInput('identifier', '🔵');
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h2')?.textContent?.trim()).toBe(
-      '🔵 Effects'
-    );
+    expect(compiled.querySelector('h2')?.textContent?.trim()).toBe('🔵 Effects');
   });
 
   it('should render effect buttons (Shadow, Mirror, Resize, Spin)', () => {

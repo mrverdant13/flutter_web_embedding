@@ -1,3 +1,34 @@
 {
-  "dart.flutterSdkPath": ".fvm/versions/3.27.4"
+  "dart.flutterSdkPath": ".fvm/versions/3.27.4",
+
+  "editor.formatOnSave": true,
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+
+  "eslint.validate": [
+    "javascript",
+    "typescript",
+    "html"
+  ],
+  "eslint.workingDirectories": [
+    { "mode": "auto" }
+  ],
+  "eslint.options": {
+    "extensions": [".ts", ".html"]
+  },
+
+  "prettier.requireConfig": true
 }

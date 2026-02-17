@@ -3,7 +3,11 @@ import { MatSidenav } from '@angular/material/sidenav';
 import { NgFlutterComponent } from './ng-flutter/ng-flutter.component';
 import { FlutterEffectsSectionComponent } from './flutter-effects-section/flutter-effects-section.component';
 import { FlutterJsInteropSectionComponent } from './flutter-js-interop-section/flutter-js-interop-section.component';
-import { NgFlutterStore, NG_FLUTTER_STORE_RED, NG_FLUTTER_STORE_BLUE } from './flutter-js-interop-section/ng-flutter-store';
+import {
+  NgFlutterStore,
+  NG_FLUTTER_STORE_RED,
+  NG_FLUTTER_STORE_BLUE,
+} from './flutter-js-interop-section/ng-flutter-store';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
@@ -23,87 +27,72 @@ import { MatInputModule } from '@angular/material/input';
     { provide: NG_FLUTTER_STORE_BLUE, useClass: NgFlutterStore },
   ],
   template: `
-<mat-toolbar color="primary">
-  <button
-    aria-label="Toggle sidenav"
-    mat-icon-button
-    (click)="toggleSidenav()">
-    <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
-  </button>
-  <span>Angular 🤝 Flutter</span>
-  <span class="toolbar-spacer"></span>
-  <mat-icon aria-hidden="true">flutter_dash</mat-icon>
-</mat-toolbar>
-<mat-sidenav-container [hasBackdrop]=false class="sidenav-container">
-  <mat-sidenav #drawer mode="side" [opened]=true class="sidenav">
-    <mat-nav-list autosize>
-      <app-flutter-effects-section identifier="🔴" [containerRef]="containerRedRef()" />
-      <app-flutter-js-interop-section
-        identifier="🔴"
-        [ngFlutterStore]="storeRed"
-      />
-      <mat-divider class="section-divider"></mat-divider>
-      <app-flutter-effects-section identifier="🔵" [containerRef]="containerBlueRef()" />
-      <app-flutter-js-interop-section
-        identifier="🔵"
-        [ngFlutterStore]="storeBlue"
-      />
-    </mat-nav-list>
-  </mat-sidenav>
+    <mat-toolbar color="primary">
+      <button aria-label="Toggle sidenav" mat-icon-button (click)="toggleSidenav()">
+        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+      </button>
+      <span>Angular 🤝 Flutter</span>
+      <span class="toolbar-spacer"></span>
+      <mat-icon aria-hidden="true">flutter_dash</mat-icon>
+    </mat-toolbar>
+    <mat-sidenav-container [hasBackdrop]="false" class="sidenav-container">
+      <mat-sidenav #drawer mode="side" [opened]="true" class="sidenav">
+        <mat-nav-list autosize>
+          <app-flutter-effects-section identifier="🔴" [containerRef]="containerRedRef()" />
+          <app-flutter-js-interop-section identifier="🔴" [ngFlutterStore]="storeRed" />
+          <mat-divider class="section-divider"></mat-divider>
+          <app-flutter-effects-section identifier="🔵" [containerRef]="containerBlueRef()" />
+          <app-flutter-js-interop-section identifier="🔵" [ngFlutterStore]="storeBlue" />
+        </mat-nav-list>
+      </mat-sidenav>
 
-  <mat-sidenav-content class="sidenav-content">
-    <div class="flutter-app" #containerRed>
-      <ng-flutter
-        targetId="🔴"
-        [ngFlutterStore]="storeRed"
-      >
-      </ng-flutter>
-    </div>
-    <div class="flutter-app" #containerBlue>
-      <ng-flutter
-        targetId="🔵"
-        [ngFlutterStore]="storeBlue"
-      >
-      </ng-flutter>
-    </div>
-  </mat-sidenav-content>
-</mat-sidenav-container>
-`,
-  styles: [`
-  :host{
-    display: flex;
-    height: 100%;
-    flex-direction: column;
-  }
-  .toolbar-spacer {
-    flex: 1 1 auto;
-  }
-  .sidenav-container {
-    flex: 1;
-  }
-  .sidenav {
-    width: 300px;
-    padding: 10px;
-  }
-  .sidenav-content {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 16px;
-    gap: 16px;
-  }
-  .flutter-app {
-    border: 2px solid #ddd;
-    border-radius: 5px;
-    height: 480px;
-    width: 320px;
-    transition: all 150ms ease-in-out;
-    overflow: hidden;
-  }
-  .section-divider {
-    margin: 10px 0;
-  }
-  `],
+      <mat-sidenav-content class="sidenav-content">
+        <div class="flutter-app" #containerRed>
+          <ng-flutter targetId="🔴" [ngFlutterStore]="storeRed"> </ng-flutter>
+        </div>
+        <div class="flutter-app" #containerBlue>
+          <ng-flutter targetId="🔵" [ngFlutterStore]="storeBlue"> </ng-flutter>
+        </div>
+      </mat-sidenav-content>
+    </mat-sidenav-container>
+  `,
+  styles: [
+    `
+      :host {
+        display: flex;
+        height: 100%;
+        flex-direction: column;
+      }
+      .toolbar-spacer {
+        flex: 1 1 auto;
+      }
+      .sidenav-container {
+        flex: 1;
+      }
+      .sidenav {
+        width: 300px;
+        padding: 10px;
+      }
+      .sidenav-content {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 16px;
+        gap: 16px;
+      }
+      .flutter-app {
+        border: 2px solid #ddd;
+        border-radius: 5px;
+        height: 480px;
+        width: 320px;
+        transition: all 150ms ease-in-out;
+        overflow: hidden;
+      }
+      .section-divider {
+        margin: 10px 0;
+      }
+    `,
+  ],
   imports: [
     NgFlutterComponent,
     FlutterEffectsSectionComponent,
@@ -117,7 +106,7 @@ import { MatInputModule } from '@angular/material/input';
     MatButtonModule,
     MatFormFieldModule,
     MatSelectModule,
-    MatInputModule
+    MatInputModule,
   ],
 })
 /**

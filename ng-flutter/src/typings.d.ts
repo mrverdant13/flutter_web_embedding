@@ -14,11 +14,11 @@ type NgFlutter = {
   initMultiViewApp: () => Promise<void>;
   addView: (
     hostElement: HTMLElement,
-    initialData: any,
-    onStateControllerReady: (state: NgFlutterStateController) => void,
+    initialData: unknown,
+    onStateControllerReady: (state: NgFlutterStateController) => void
   ) => Promise<number>;
-  removeView: (viewId: number) => Promise<any>;
+  removeView: (viewId: number) => Promise<unknown>;
 };
 
 // The global _ngFlutter namespace
-declare var _ngFlutter: NgFlutter;
+declare const _ngFlutter: NgFlutter;

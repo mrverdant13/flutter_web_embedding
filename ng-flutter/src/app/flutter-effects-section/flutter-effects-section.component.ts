@@ -9,28 +9,54 @@ import { resolveContainerElement } from './resolve-container-element';
     <section>
       <h2>{{ sectionTitle() }}</h2>
       <div class="button-list">
-        <button class="mb-control" mat-stroked-button color="primary"
-            (click)="toggleEffect('fx-shadow')">Shadow</button>
-        <button class="mb-control" mat-stroked-button color="primary"
-            (click)="toggleEffect('fx-mirror')">Mirror</button>
-        <button class="mb-control" mat-stroked-button color="primary"
-            (click)="toggleEffect('fx-resize')">Resize</button>
-        <button class="mb-control" mat-stroked-button color="primary"
-            (click)="toggleEffect('fx-spin')">Spin</button>
+        <button
+          class="mb-control"
+          mat-stroked-button
+          color="primary"
+          (click)="toggleEffect('fx-shadow')"
+        >
+          Shadow
+        </button>
+        <button
+          class="mb-control"
+          mat-stroked-button
+          color="primary"
+          (click)="toggleEffect('fx-mirror')"
+        >
+          Mirror
+        </button>
+        <button
+          class="mb-control"
+          mat-stroked-button
+          color="primary"
+          (click)="toggleEffect('fx-resize')"
+        >
+          Resize
+        </button>
+        <button
+          class="mb-control"
+          mat-stroked-button
+          color="primary"
+          (click)="toggleEffect('fx-spin')"
+        >
+          Spin
+        </button>
       </div>
     </section>
   `,
-  styles: [`
-    .button-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 5px;
-      margin-bottom: 20px;
-    }
-    .button-list button {
-      min-width: 130px;
-    }
-  `],
+  styles: [
+    `
+      .button-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+        margin-bottom: 20px;
+      }
+      .button-list button {
+        min-width: 130px;
+      }
+    `,
+  ],
   imports: [MatButtonModule],
 })
 /**

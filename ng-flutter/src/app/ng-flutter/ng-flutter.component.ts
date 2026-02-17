@@ -3,29 +3,30 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { NgFlutterStore } from '../flutter-js-interop-section/ng-flutter-store';
 
 @Component({
+  // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'ng-flutter',
   standalone: true,
   template: `
-  <div #flutterTarget [id]="targetId()">
-    <div class="spinner">
-      <mat-spinner></mat-spinner>
+    <div #flutterTarget [id]="targetId()">
+      <div class="spinner">
+        <mat-spinner></mat-spinner>
+      </div>
     </div>
-  </div>
   `,
-  styles: [`
-    :host div {
-      width: 100%;
-      height: 100%;
-    }
-    .spinner {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }`,
+  styles: [
+    `
+      :host div {
+        width: 100%;
+        height: 100%;
+      }
+      .spinner {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+    `,
   ],
-  imports: [
-    MatProgressSpinnerModule,
-  ],
+  imports: [MatProgressSpinnerModule],
 })
 /**
  * Embeds a Flutter view into an Angular template.
@@ -89,7 +90,7 @@ export class NgFlutterComponent implements AfterViewInit, OnDestroy {
         state.onTextChanged(() => {
           this.ngFlutterStore().setText(state.text);
         });
-      },
+      }
     );
     this.viewId.set(id);
   }

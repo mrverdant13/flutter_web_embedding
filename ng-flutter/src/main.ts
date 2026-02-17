@@ -8,7 +8,8 @@ const appRoutes: Routes = [];
 
 bootstrapApplication(AppComponent, {
   providers: [
-    provideZoneChangeDetection(),provideRouter(appRoutes),
-    importProvidersFrom(BrowserAnimationsModule)
-  ]
-})
+    provideZoneChangeDetection(),
+    provideRouter(appRoutes),
+    importProvidersFrom(BrowserAnimationsModule),
+  ],
+});

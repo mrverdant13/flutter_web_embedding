@@ -5,10 +5,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { NgFlutterStore } from './ng-flutter-store';
-import {
-  parseCounterValueFromInput,
-  parseTextValueFromInput,
-} from './input-value-parsers';
+import { parseCounterValueFromInput, parseTextValueFromInput } from './input-value-parsers';
 
 /** Shape of state and callbacks exposed by the Flutter JS interop layer. */
 export type FlutterState = {
@@ -29,8 +26,9 @@ export type FlutterState = {
       <mat-form-field appearance="outline">
         <mat-label>Screen</mat-label>
         <mat-select
-            (valueChange)="ngFlutterStore().setScreen($event)"
-            [value]="ngFlutterStore().screen()">
+          (valueChange)="ngFlutterStore().setScreen($event)"
+          [value]="ngFlutterStore().screen()"
+        >
           <mat-option value="counter">Counter</mat-option>
           <mat-option value="text">TextField</mat-option>
           <mat-option value="dash">Custom App</mat-option>
@@ -39,18 +37,24 @@ export type FlutterState = {
       @if (ngFlutterStore().screen() === 'counter') {
         <mat-form-field appearance="outline">
           <mat-label>Clicks</mat-label>
-          <input type="number" matInput
+          <input
+            type="number"
+            matInput
             (input)="applyCounterFromInput($event)"
             (keydown.enter)="blurCounterInput($event)"
-            [value]="ngFlutterStore().clicks()" />
+            [value]="ngFlutterStore().clicks()"
+          />
         </mat-form-field>
       } @else {
         <mat-form-field appearance="outline">
           <mat-label>Text</mat-label>
-          <input type="text" matInput
+          <input
+            type="text"
+            matInput
             (input)="applyTextFromInput($event)"
             (keydown.escape)="clearText()"
-            [value]="ngFlutterStore().text()" />
+            [value]="ngFlutterStore().text()"
+          />
           @if (ngFlutterStore().text()) {
             <button matSuffix mat-icon-button aria-label="Clear" (click)="clearText()">
               <mat-icon>close</mat-icon>
@@ -60,13 +64,7 @@ export type FlutterState = {
       }
     </section>
   `,
-  imports: [
-    MatFormFieldModule,
-    MatInputModule,
-    MatSelectModule,
-    MatIconModule,
-    MatButtonModule,
-  ],
+  imports: [MatFormFieldModule, MatInputModule, MatSelectModule, MatIconModule, MatButtonModule],
 })
 /**
  * Section component providing JS interop controls for a Flutter view.

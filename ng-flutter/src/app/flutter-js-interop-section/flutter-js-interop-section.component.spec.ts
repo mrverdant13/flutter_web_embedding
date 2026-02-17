@@ -27,18 +27,14 @@ describe('FlutterJsInteropSectionComponent', () => {
 
   it('should show default section title when identifier is not set', () => {
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h2')?.textContent?.trim()).toBe(
-      'JS Interop'
-    );
+    expect(compiled.querySelector('h2')?.textContent?.trim()).toBe('JS Interop');
   });
 
   it('should show section title with identifier when set', () => {
     fixture.componentRef.setInput('identifier', '🔴');
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h2')?.textContent?.trim()).toBe(
-      '🔴 JS Interop'
-    );
+    expect(compiled.querySelector('h2')?.textContent?.trim()).toBe('🔴 JS Interop');
   });
 
   it('should display screen select with counter option', () => {
@@ -96,9 +92,7 @@ describe('FlutterJsInteropSectionComponent', () => {
     store.setScreen('text');
     store.setText('some text');
     fixture.detectChanges();
-    const clearButton = fixture.nativeElement.querySelector(
-      'button[aria-label="Clear"]'
-    );
+    const clearButton = fixture.nativeElement.querySelector('button[aria-label="Clear"]');
     expect(clearButton).toBeTruthy();
     clearButton!.dispatchEvent(new Event('click'));
     expect(store.text()).toBe('');

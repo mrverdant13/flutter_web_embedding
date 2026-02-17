@@ -1,10 +1,5 @@
 import { inject } from '@angular/core';
-import {
-  ComponentFixture,
-  TestBed,
-  fakeAsync,
-  flush,
-} from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, flush } from '@angular/core/testing';
 import { NgFlutterComponent } from './ng-flutter.component';
 import { NgFlutterStore } from '../flutter-js-interop-section/ng-flutter-store';
 
@@ -49,8 +44,7 @@ describe('NgFlutterComponent', () => {
 
   afterEach(() => {
     if (originalNgFlutter !== undefined) {
-      (globalThis as unknown as { _ngFlutter: typeof _ngFlutter })._ngFlutter =
-        originalNgFlutter;
+      (globalThis as unknown as { _ngFlutter: typeof _ngFlutter })._ngFlutter = originalNgFlutter;
     } else {
       delete (globalThis as unknown as { _ngFlutter?: typeof _ngFlutter })._ngFlutter;
     }
@@ -65,16 +59,13 @@ describe('NgFlutterComponent', () => {
     expect(compiled.querySelector('mat-spinner')).toBeTruthy();
   });
 
-  it(
-    'should call initMultiViewApp and addView on ngAfterViewInit',
-    fakeAsync(() => {
-      flush();
-      expect(mockInitMultiViewApp).toHaveBeenCalled();
-      expect(mockAddView).toHaveBeenCalled();
-      const addViewArgs = mockAddView.calls.mostRecent().args;
-      expect(addViewArgs[1].targetElementId).toBe('test-flutter-target');
-    })
-  );
+  it('should call initMultiViewApp and addView on ngAfterViewInit', fakeAsync(() => {
+    flush();
+    expect(mockInitMultiViewApp).toHaveBeenCalled();
+    expect(mockAddView).toHaveBeenCalled();
+    const addViewArgs = mockAddView.calls.mostRecent().args;
+    expect(addViewArgs[1].targetElementId).toBe('test-flutter-target');
+  }));
 
   it('should not throw on destroy', fakeAsync(() => {
     flush(); // allow ngAfterViewInit / addView to complete

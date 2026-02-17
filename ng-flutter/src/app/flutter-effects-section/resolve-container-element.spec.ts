@@ -23,8 +23,6 @@ describe('resolveContainerElement', () => {
 
   it('should return the same element for both input types', () => {
     const elementRef = new ElementRef(mockElement);
-    expect(resolveContainerElement(elementRef)).toBe(
-      resolveContainerElement(mockElement)
-    );
+    expect(resolveContainerElement(elementRef)).toBe(resolveContainerElement(mockElement));
   });
 });

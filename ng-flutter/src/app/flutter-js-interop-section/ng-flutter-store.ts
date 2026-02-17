@@ -1,14 +1,10 @@
 import { InjectionToken, Injectable, signal } from '@angular/core';
 
 /** Injection token for the red Flutter view's state store. */
-export const NG_FLUTTER_STORE_RED = new InjectionToken<NgFlutterStore>(
-  'NgFlutterStoreRed'
-);
+export const NG_FLUTTER_STORE_RED = new InjectionToken<NgFlutterStore>('NgFlutterStoreRed');
 
 /** Injection token for the blue Flutter view's state store. */
-export const NG_FLUTTER_STORE_BLUE = new InjectionToken<NgFlutterStore>(
-  'NgFlutterStoreBlue'
-);
+export const NG_FLUTTER_STORE_BLUE = new InjectionToken<NgFlutterStore>('NgFlutterStoreBlue');
 
 /**
  * Shared state store between Angular and a Flutter view.

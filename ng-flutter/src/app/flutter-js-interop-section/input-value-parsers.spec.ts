@@ -1,7 +1,4 @@
-import {
-  parseCounterValueFromInput,
-  parseTextValueFromInput,
-} from './input-value-parsers';
+import { parseCounterValueFromInput, parseTextValueFromInput } from './input-value-parsers';
 
 describe('parseCounterValueFromInput', () => {
   it('should parse a valid integer', () => {

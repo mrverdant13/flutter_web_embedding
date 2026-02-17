@@ -26,17 +26,13 @@ describe('AppComponent', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('mat-toolbar')?.textContent).toContain(
-      'Angular 🤝 Flutter'
-    );
+    expect(compiled.querySelector('mat-toolbar')?.textContent).toContain('Angular 🤝 Flutter');
   });
 
   it('should have menu button for toggling sidenav', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
-    const button = fixture.nativeElement.querySelector(
-      'button[aria-label="Toggle sidenav"]'
-    );
+    const button = fixture.nativeElement.querySelector('button[aria-label="Toggle sidenav"]');
     expect(button).toBeTruthy();
     expect(button?.getAttribute('aria-label')).toBe('Toggle sidenav');
   });
