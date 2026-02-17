@@ -1,16 +1,10 @@
 import { TestBed } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
 
 describe('AppComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        RouterTestingModule
-      ],
-      declarations: [
-        AppComponent
-      ],
+      imports: [AppComponent],
     }).compileComponents();
   });
 
@@ -20,16 +14,30 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have as title 'ng-flutter'`, () => {
+  it('should have storeRed and storeBlue injected', () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    expect(app.title).toEqual('ng-flutter');
+    expect(app.storeRed).toBeTruthy();
+    expect(app.storeBlue).toBeTruthy();
+    expect(app.storeRed).not.toBe(app.storeBlue);
   });
 
-  it('should render title', () => {
+  it('should render toolbar with Angular Flutter title', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('.content span')?.textContent).toContain('ng-flutter app is running!');
+    expect(compiled.querySelector('mat-toolbar')?.textContent).toContain(
+      'Angular 🤝 Flutter'
+    );
+  });
+
+  it('should have menu button for toggling sidenav', () => {
+    const fixture = TestBed.createComponent(AppComponent);
+    fixture.detectChanges();
+    const button = fixture.nativeElement.querySelector(
+      'button[aria-label="Toggle sidenav"]'
+    );
+    expect(button).toBeTruthy();
+    expect(button?.getAttribute('aria-label')).toBe('Toggle sidenav');
   });
 });
